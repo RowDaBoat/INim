@@ -1,0 +1,5 @@
+proc get{casedName}*(): {type} {.exportc, dynlib.} =
+  result = {name}
+
+proc set{casedName}*(new{casedName}: {type}) {.exportc, dynlib.} =
+  {name} = new{casedName}

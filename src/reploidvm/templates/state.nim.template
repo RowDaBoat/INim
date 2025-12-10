@@ -1,0 +1,18 @@
+import dynlib
+import declarations
+
+# Variable declarations
+{variableDeclarations}
+
+# Accessor declarations
+{accessorDeclarations}
+
+proc initialize*(oldStateLib: pointer) {.exportc, dynlib.} =
+  if oldStateLib.isNil:
+    return
+
+  # Load Old Get Accessors
+  {loadOldGetAccessors}
+
+  # Update State
+  {updateState}

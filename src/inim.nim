@@ -345,6 +345,9 @@ call(cmd) - Execute command cmd in current shell
         currentExpression.add("()")
     else:
       discard
+  elif currentExpression == "code":
+    echo readFile(bufferSource)
+    return
 
   ## process line
   let indentResult = indenter.process(currentExpression)
@@ -366,13 +369,14 @@ call(cmd) - Execute command cmd in current shell
 
   # Succesful compilation, expression is valid
   if status == 0:
+    echo "s: 0"
     compilationSuccess(currentExpression, output)
     if "echo" in currentExpression:
       # Roll back echoes
       bufferRestoreValidCode()
   # Maybe trying to echo value?
-  elif "has to be used" in output or "has to be discarded" in output and
-      indenter.indentLevel == 0: #
+  elif "has to be used" in output or "has to be discarded" in output and indentResult.atRootLevel:
+    echo "s: echo strap"
     bufferRestoreValidCode()
 
     # Save the current expression as an echo
@@ -384,15 +388,13 @@ call(cmd) - Execute command cmd in current shell
     buffer.flushFile()
 
     # Don't run yet if still on indent
-    if indenter.indentLevel != 0:
+    if not indentResult.atRootLevel:
       # Skip indent for first line
       indenter.indentedCode &= currentExpression & "\n"
       when promptHistory:
         # Add in indents to our history
         if currentExpression.len > 0:
-          noiser.historyAdd(
-            currentExpression
-          )
+          noiser.historyAdd(currentExpression)
 
     let (echo_output, echo_status) = compileCode()
     if echo_status == 0:
@@ -412,6 +414,7 @@ call(cmd) - Execute command cmd in current shell
     # Roll back to not include the temporary echo line
     bufferRestoreValidCode()
   else:
+    echo "s: error"
     # Write back valid code to buffer
     bufferRestoreValidCode()
     indenter.indentLevel = 0
@@ -426,14 +429,14 @@ proc initApp*(nim, srcFile: string, showHeader: bool,
 
   ## Initialize the ``app` variable.
   app = App(
-      nim: nim,
-      srcFile: srcFile,
-      showHeader: showHeader,
-      flags: flags,
-      rcFile: rcFilePath,
-      showColor: showColor,
-      withTools: false,
-      backend: initBackend(backendKind, nim, flags)
+    nim: nim,
+    srcFile: srcFile,
+    showHeader: showHeader,
+    flags: flags,
+    rcFile: rcFilePath,
+    showColor: showColor,
+    withTools: false,
+    backend: initBackend(backendKind, nim, flags)
   )
 
 

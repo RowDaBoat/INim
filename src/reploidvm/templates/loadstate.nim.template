@@ -1,0 +1,1 @@
+var {bindingName} = get{casedSymbolName}()

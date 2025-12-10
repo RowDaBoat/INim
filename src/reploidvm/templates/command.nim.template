@@ -1,0 +1,18 @@
+import dynlib
+import declarations
+
+proc run*(stateLib: pointer) {.exportc, dynlib.} =
+  # Load Get Accessors
+  {loadGetAccessors}
+
+  # Load Set Accessors
+  {loadSetAccessors}
+
+  # Load State
+  {loadState}
+
+  # Command
+  {command}
+
+  # Save State
+  {saveState}

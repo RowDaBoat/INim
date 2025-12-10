@@ -1,0 +1,2 @@
+type Get{casedSymbolName} = proc(): {type} {.gcsafe, stdcall.}
+let get{casedBindingName} = cast[Get{casedSymbolName}]({state}.symAddr("get{casedSymbolName}"))

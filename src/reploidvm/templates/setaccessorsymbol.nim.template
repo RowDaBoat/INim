@@ -1,0 +1,2 @@
+type Set{casedSymbolName} = proc(value: {type}) {.gcsafe, stdcall.}
+let set{casedBindingName} = cast[Set{casedSymbolName}]({state}.symAddr("set{casedSymbolName}"))
