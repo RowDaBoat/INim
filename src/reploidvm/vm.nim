@@ -6,7 +6,7 @@ import dynlib
 import sequtils
 import strutils
 
-import compiler
+import ../compiler
 import temple
 
 
@@ -15,21 +15,32 @@ const libExt = ".lib"
 const templateExt = ".nim.template"
 
 const tempPath = "tmp"
-const statePath = tempPath/"state"
-const commandPath = tempPath/"command"
 const templatesPath = "templates"
-const stateTemplatePath = templatesPath/"state" & templateExt
-const commandTemplatePath = templatesPath/"command" & templateExt
-const accessorsTemplatePath = templatesPath/"accessors" & templateExt
-const getAccessorSymbolTemplatePath = templatesPath/"getaccessorsymbol" & templateExt
-const setAccessorSymbolTemplatePath = templatesPath/"setaccessorsymbol" & templateExt
-const stateUpdaterTemplatePath = templatesPath/"stateupdater" & templateExt
-const loadStateTemplatePath = templatesPath/"loadstate" & templateExt
-const saveStateTemplatePath = templatesPath/"savestate" & templateExt
+
+const importsPath = tempPath/"imports"
+const importsSourcePath = importsPath & nimExt
+const importsLibraryPath = importsPath & libExt
+
+const declarationsPath = tempPath/"declarations"
+const declarationsSourcePath = declarationsPath & nimExt
+const declarationsLibraryPath = declarationsPath & libExt
+
+const statePath = tempPath/"state"
 const stateSourcePath = statePath & nimExt
+
+const commandPath = tempPath/"command"
 const commandSourcePath = commandPath & nimExt
 const commandLibraryPath = commandPath & libExt
 
+const declarationsTemplate =      staticRead(templatesPath/"declarations" & templateExt)
+const stateTemplate =             staticRead(templatesPath/"state" & templateExt)
+const commandTemplate =           staticRead(templatesPath/"command" & templateExt)
+const accessorsTemplate =         staticRead(templatesPath/"accessors" & templateExt)
+const getAccessorSymbolTemplate = staticRead(templatesPath/"getaccessorsymbol" & templateExt)
+const setAccessorSymbolTemplate = staticRead(templatesPath/"setaccessorsymbol" & templateExt)
+const stateUpdaterTemplate =      staticRead(templatesPath/"stateupdater" & templateExt)
+const loadStateTemplate =         staticRead(templatesPath/"loadstate" & templateExt)
+const saveStateTemplate =         staticRead(templatesPath/"savestate" & templateExt)
 
 type Initialize* = proc(oldStateLib: pointer) {.gcsafe, stdcall.}
 type Run* = proc(state: pointer) {.gcsafe, stdcall.}
@@ -42,6 +53,7 @@ type VariableDeclaration* = object
 
 
 type ReploidVM* = object
+  declarationsTemplate: string
   stateTemplate: string
   commandTemplate: string
   accessorsTemplate: string
@@ -52,8 +64,12 @@ type ReploidVM* = object
   saveStateTemplate: string
 
   compiler: Compiler
+  imports: seq[string]
+  newImports: seq[string]
   variables: seq[VariableDeclaration]
   newVariables: seq[VariableDeclaration]
+  declarations: seq[string]
+  newDeclarations: seq[string]
   states: seq[LibHandle]
 
 
@@ -122,6 +138,16 @@ proc saveState(self: ReploidVM, variable: VariableDeclaration): string =
   )
 
 
+proc generateDeclarationsSource*(self: ReploidVM): string =
+  let imports = self.imports.join("\n")
+  let declarations = self.declarations.join("\n")
+
+  return self.declarationsTemplate.replace(
+    ("imports", imports),
+    ("declarations", declarations)
+  )
+
+
 proc generateStateSource*(self: ReploidVM, variables: seq[VariableDeclaration]): string =
   let variableDeclarations = variables.mapIt(declaration(it)).join("\n")
   let accessorsDeclarations = variables.mapIt(self.accessors(it)).join("\n")
@@ -154,15 +180,24 @@ proc generateCommandSource*(self: ReploidVM, command: string): string =
 proc newReploidVM*(compiler: Compiler): ReploidVM =
   ReploidVM(
     compiler: compiler,
-    stateTemplate: readFile(stateTemplatePath),
-    commandTemplate: readFile(commandTemplatePath),
-    accessorsTemplate: readFile(accessorsTemplatePath),
-    getAccessorSymbolTemplate: readFile(getAccessorSymbolTemplatePath),
-    setAccessorSymbolTemplate: readFile(setAccessorSymbolTemplatePath),
-    stateUpdaterTemplate: readFile(stateUpdaterTemplatePath),
-    loadStateTemplate: readFile(loadStateTemplatePath),
-    saveStateTemplate: readFile(saveStateTemplatePath)
+    declarationsTemplate: declarationsTemplate,
+    stateTemplate: stateTemplate,
+    commandTemplate: commandTemplate,
+    accessorsTemplate: accessorsTemplate,
+    getAccessorSymbolTemplate: getAccessorSymbolTemplate,
+    setAccessorSymbolTemplate: setAccessorSymbolTemplate,
+    stateUpdaterTemplate: stateUpdaterTemplate,
+    loadStateTemplate: loadStateTemplate,
+    saveStateTemplate: saveStateTemplate
   )
+
+
+proc isSuccess*(toCheck: (string, int)): bool =
+  toCheck[1] == 0
+
+
+proc declareImport*(self: var ReploidVM, declaration: string) =
+  self.newImports.add(declaration)
 
 
 proc declareVar*(self: var ReploidVM, declarer: string, name: string, typ: string) =
@@ -170,13 +205,35 @@ proc declareVar*(self: var ReploidVM, declarer: string, name: string, typ: strin
   self.newVariables.add(declaration)
 
 
-proc rebuildState*(self: var ReploidVM): string =
+proc declare*(self: var ReploidVM, declaration: string) =
+  self.newDeclarations.add(declaration)
+
+
+proc updateImports*(self: var ReploidVM): (string, int) =
+  let imports = self.imports & self.newImports
+  let source = imports.join("\n")
+
+  importsSourcePath.writeFile(source)
+  result = self.compiler.compileLibrary(importsSourcePath, importsLibraryPath)
+
+  if result.isSuccess:
+    self.imports.add(self.newImports)
+
+  self.newImports = @[]
+
+
+proc updateState*(self: var ReploidVM): (string, int) =
   let newVariables = self.variables & self.newVariables
   let source = self.generateStateSource(newVariables)
   let stateLibraryPath = statePath & $self.states.len & libExt
 
   stateSourcePath.writeFile(source)
-  discard self.compiler.compileLibrary(stateSourcePath, stateLibraryPath)
+
+  result = self.compiler.compileLibrary(stateSourcePath, stateLibraryPath)
+
+  if not result.isSuccess:
+    self.newVariables = @[]
+    return result
 
   let newState = loadLib(stateLibraryPath)
   let initialize = cast[Initialize](newState.symAddr("initialize"))
@@ -189,27 +246,45 @@ proc rebuildState*(self: var ReploidVM): string =
   self.newVariables = @[]
 
 
-# DONE: manage dynamic libraries
-# DONE: cleanup on exit
-# TODO: error handling
-# TODO: declare let
-# TODO: support type declarations
-# TODO: parametrize tmp and template paths
-proc runCommand*(self: var ReploidVM, command: string) =
-  let source = self.generateCommandSource(command)
+proc updateDeclarations*(self: var ReploidVM): (string, int) =
+  let declarations = self.declarations & self.newDeclarations
+  let source = declarations.join("\n")
 
-  commandSourcePath.writeFile(source)
-  discard self.compiler.compileLibrary(commandSourcePath, commandLibraryPath)
+  declarationsSourcePath.writeFile(source)
+  result = self.compiler.compileLibrary(declarationsSourcePath, declarationsLibraryPath)
+
+  if result.isSuccess:
+    self.declarations.add(self.newDeclarations)
+
+  self.newDeclarations = @[]
+
+
+proc runCommand*(self: var ReploidVM, command: string): (string, int) =
+  let declarationsSource = self.generateDeclarationsSource()
+  declarationsSourcePath.writeFile(declarationsSource)
+
+  let commandSource = self.generateCommandSource(command)
+  commandSourcePath.writeFile(commandSource)
+
+  result = self.compiler.compileLibrary(commandSourcePath, commandLibraryPath)
+
+  if not result.isSuccess:
+    return result
 
   let commandLib = loadLib(commandLibraryPath)
   let run = cast[Run](commandLib.symAddr("run"))
   run(self.states[^1])
   unloadLib(commandLib)
 
+
 proc clean*(self: var ReploidVM) =
   for state in self.states:
     unloadLib(state)
 
-  self.states = @[]
-  self.variables = @[]
+  self.newImports = @[]
+  self.imports = @[]
+  self.newDeclarations = @[]
+  self.declarations = @[]
   self.newVariables = @[]
+  self.variables = @[]
+  self.states = @[]

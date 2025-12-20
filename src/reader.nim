@@ -4,7 +4,7 @@
 import noise
 import strutils
 import input
-import output
+import styledoutput
 
 
 type Reader* = object

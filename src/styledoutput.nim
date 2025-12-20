@@ -35,7 +35,7 @@ proc colorScheme*(
 
 
 proc newOutput*(
-  colored: bool = true,
+  colors: bool = true,
   nim: ColorScheme = colorScheme(fgYellow, true),
   promptMessage: ColorScheme = colorScheme(fgYellow, false),
   promptSymbol: ColorScheme = colorScheme(),
@@ -44,7 +44,7 @@ proc newOutput*(
   warning: ColorScheme = colorScheme(fgYellow, false),
   error: ColorScheme = colorScheme(fgRed, false),
 ): Output =
-  if not colored:
+  if not colors:
     let noColor = colorScheme()
     return Output(
       nim: noColor, promptMessage: noColor, promptSymbol: noColor,

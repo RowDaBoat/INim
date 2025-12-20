@@ -1,5 +1,5 @@
 import dynlib
-import declarations
+include declarations
 
 proc run*(stateLib: LibHandle) {.exportc, dynlib.} =
   # Load Get Accessors

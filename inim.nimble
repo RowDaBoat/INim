@@ -9,15 +9,11 @@ installDirs   = @["src"]
 installExt    = @["nim"]
 bin           = @["inim"]
 
-# To make 'import' search the 'src' directory, use 'srcDir'
 srcDir        = "src"
 
-
-# Dependencies
-
-requires "cligen >= 1.5.22"
-#requires "noise >= 0.1.4"
-requires "https://github.com/RowDaBoat/nim-noise.git"
+requires "cligen >= 1.5.22" #TODO: remove
+requires "https://github.com/RowDaBoat/cliquet.git#master"
+requires "https://github.com/jangko/nim-noise.git#master"
 requires "https://github.com/beef331/nimscripter.git"
 
 task test, "Run all tests":

@@ -2,7 +2,7 @@
 # Copyright (c) 2025 RowDaBoat
 
 import osproc, strformat, strutils
-import output
+import styledoutput
 
 
 const NimblePkgVersion* {.strdefine.} = ""
@@ -13,16 +13,18 @@ type Welcome* = object
   color: bool
 
 
-proc reploidName(output: Output) =
+proc reploidNameAndVersion(output: Output) =
   let prefix = when not defined(Windows): "👑 " else: ""
   let version = if NimblePkgVersion.len > 0: " v" & NimblePkgVersion else: ""
   output.nim(prefix & "Reploid" & version)
 
 
-proc version(output: Output, nim: string) =
+proc nimVersion(output: Output, nim: string) =
   let (nimVersion, status) = execCmdEx(fmt"{nim} --version")
-  doAssert status == 0, fmt"make sure {nim} is in PATH"
-  output.okResult(nimVersion.splitLines()[0])
+  if status == 0:
+    output.okResult(nimVersion.splitLines()[0])
+  else:
+    output.error(fmt"'{nim}' compiler not found.")
 
 
 proc path(output: Output, nim: string) =
@@ -35,10 +37,10 @@ proc path(output: Output, nim: string) =
   if status == 0:
     output.okResult("at " & path)
   else:
-    output.error(fmt"  could not find {nim} in PATH")
+    output.error("")
 
 
 proc welcome*(output: Output, nim: string) =
-  output.nim("┬─┐┌─┐┌─┐┬  ┌─┐┬┌┬┐ ", newline = false); output.reploidName()
-  output.nim("├┬┘├┤ ├─┘│  │ ││ ││ ", newline = false); output.version(nim)
+  output.nim("┬─┐┌─┐┌─┐┬  ┌─┐┬┌┬┐ ", newline = false); output.reploidNameAndVersion()
+  output.nim("├┬┘├┤ ├─┘│  │ ││ ││ ", newline = false); output.nimVersion(nim)
   output.nim("┴└─└─┘┴  ┴─┘└─┘┴─┴┘ ", newline = false); output.path(nim)

@@ -4,12 +4,13 @@
 import input
 import strutils
 import evaluation
+import reploidvm/vm
 
 
 type Evaluator* = object
-  discard
+  vm: ReploidVM
 
-proc evaluateLines*(lines: string): Evaluation =
+proc evaluateLines*(self: Evaluator, lines: string): Evaluation =
   if lines == "":
     return Evaluation(kind: Empty)
 
@@ -18,14 +19,14 @@ proc evaluateLines*(lines: string): Evaluation =
 
   return Evaluation(kind: Success, result: lines)
 
-proc newEvaluator*(): Evaluator =
-  Evaluator()
+proc newEvaluator*(vm: ReploidVM): Evaluator =
+  Evaluator(vm: vm)
 
 
 proc eval*(self: Evaluator, input: Input): Evaluation =
   case input.kind:
   of Lines:
-    return evaluateLines(input.lines)
+    return self.evaluateLines(input.lines)
   of Reset:
     return Evaluation(kind: Empty)
   of Editor:

@@ -1,7 +1,7 @@
 # ISC License
 # Copyright (c) 2025 RowDaBoat
 
-import output
+import styledoutput
 import evaluation
 
 
