@@ -17,8 +17,7 @@ import repl/welcome
 import repl/styledoutput
 import repl/evaluation
 import commands/commands
-import commands/imports
-import commands/declarations
+import commands/source
 import commands/quit
 
 
@@ -46,9 +45,8 @@ proc defaultConfig*(): Configuration =
 
 
 proc defaultCommands*(): Table[string, Command] = commands(
-  command("imports", "shows all imports", importsSource),
-  command("declarations", "shows all type and proc declarations", declarationsSource),
-  command("quit", "quits reploid", quitReploid)
+  command("source", "<imports|declarations|command> shows the source of imports, declarations or the last command", sourceCmd),
+  command("quit", "quits reploid", quitCmd)
 )
 
 
