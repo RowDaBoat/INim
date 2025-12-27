@@ -268,19 +268,21 @@ proc runCommand*(self: var ReploidVM, command: string): (string, int) =
   if not result.isSuccess:
     return result
 
-  inc commandId
   let commandLib = loadLib(libPath)
 
   if commandLib.isNil:
     raise newException(Exception, "Failed to load command library: " & libPath)
 
+  inc commandId
   let runPointer = commandLib.symAddr("run")
 
   if runPointer.isNil:
     raise newException(Exception, "Failed to get 'run' symbol from command library: " & libPath)
 
-  let run = cast[Run](runPointer)
-  result[0] = run(if self.states.len == 0: nil else: self.states[^1])
+  block:
+    let run = cast[Run](runPointer)
+    result[0] = "" & run(if self.states.len == 0: nil else: self.states[^1])
+
   unloadLib(commandLib)
 
 
@@ -290,6 +292,10 @@ proc importsSource*(self: ReploidVM): string =
 
 proc declarationsSource*(self: ReploidVM): string =
   readFile(self.declarationsPath & nimExt)
+
+
+proc commandSource*(self: ReploidVM): string =
+  readFile(self.commandPath & nimExt)
 
 
 proc clean*(self: var ReploidVM) =
