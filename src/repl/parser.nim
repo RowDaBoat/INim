@@ -28,7 +28,8 @@ proc startsAsLabelOrNumber(text: string): bool =
 proc startsAsSymbol(text: string): bool =
   let notAlphaNumeric = not text[0].isAlphaNumeric
   let notUnderscore = text[0] != '_'
-  text.len > 0 and notAlphaNumeric and notUnderscore
+  let notWhitespace = not text[0].isSpaceAscii
+  text.len > 0 and notAlphaNumeric and notUnderscore and notWhitespace
 
 
 proc parse*(text: string): Parser =
