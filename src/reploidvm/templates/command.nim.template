@@ -16,7 +16,7 @@ template showIfTyped(body: untyped): string =
       "'" & $value & "'" & " type: " & $typeof(value)
 
 
-proc run*(stateLib: LibHandle): string {.exportc, dynlib.} =
+proc run*(stateLib: LibHandle): string {.exportc, dynlib, stdcall.} =
   # Load Get Accessors
   {loadGetAccessors}
 

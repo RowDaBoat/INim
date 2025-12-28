@@ -1,5 +1,5 @@
-proc get{casedName}*(): {type} {.exportc, dynlib.} =
+proc get{casedName}*(): {type} {.exportc, dynlib, stdcall.} =
   result = {name}
 
-proc set{casedName}*(new{casedName}: {type}) {.exportc, dynlib.} =
+proc set{casedName}*(new{casedName}: {type}) {.exportc, dynlib, stdcall.} =
   {name} = new{casedName}

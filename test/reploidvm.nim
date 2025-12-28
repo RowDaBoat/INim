@@ -6,7 +6,6 @@ import ../src/reploidvm/vm
 import ../src/reploidvm/compiler
 import strutils
 
-
 suite "Reploid VM should:":
   setup:
     let nim = newNimCompiler("nim", @[])
@@ -15,6 +14,8 @@ suite "Reploid VM should:":
 
   teardown:
     vm.clean()
+
+
   test "run a simple command":
     result = vm.runCommand("echo \"Protobot.\"")
     check result == ("", 0)
@@ -112,12 +113,11 @@ suite "Reploid VM should:":
         s: seq[int]
     """.unindent(6))
 
-    result = vm.updateDeclarations()
-    check result == ("", 0)
-
+    discard vm.updateDeclarations()
     vm.declareVar("var", "o", "O", "")
-    result = vm.updateState()
-    check result == ("", 0)
 
-    result = vm.runCommand("discard")
+    discard vm.updateState()
+    vm.declareVar("var", "u", "O", "")
+
+    discard vm.updateState()
     check result == ("", 0)

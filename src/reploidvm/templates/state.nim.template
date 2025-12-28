@@ -8,12 +8,11 @@ include declarations
 # Accessor declarations
 {accessorDeclarations}
 
-proc initialize*(oldStateLib: LibHandle) {.exportc, dynlib.} =
-  if oldStateLib.isNil:
-    return
-
+proc initialize*(oldStateLib: LibHandle) {.exportc, dynlib, stdcall.} =
   # Load Old Get Accessors
   {loadOldGetAccessors}
 
   # Update State
   {updateState}
+
+  discard
