@@ -1,2 +1,0 @@
-proc set{casedName}*(new{casedName}: {type}) {.exportc, dynlib, stdcall.} =
-  {name} = new{casedName}

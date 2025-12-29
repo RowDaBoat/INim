@@ -1,6 +1,26 @@
 import dynlib
+import macros
+import strutils
 include imports
 include declarations
+
+macro genGetter(name, typ: untyped): untyped =
+  let casedName = ($name)[0].toUpperAscii & ($name)[1..^1]
+  let procName = ident("get" & casedName)
+
+  result = quote do:
+    proc `procName`*(): typeof(`name`) {.exportc, dynlib, stdcall.} =
+      result = `name`
+
+
+macro genSetter(name, typ: untyped): untyped =
+  let casedName = ($name)[0].toUpperAscii & ($name)[1..^1]
+  let procName = ident("set" & casedName)
+  let newName = ident("new" & casedName)
+
+  result = quote do:
+    proc `procName`*(`newName`: typeof(`name`)) {.exportc, dynlib, stdcall.} =
+      `name` = `newName`
 
 # Variable declarations
 {variableDeclarations}

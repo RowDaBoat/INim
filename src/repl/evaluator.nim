@@ -42,16 +42,6 @@ proc isVariableDeclaration(lines: string): Parser =
     .matchKeywords("var", "let", "const")
     .consumeSpaces()
     .matchLabel()
-    .consumeSpaces()
-    .matchSymbols(":")
-    .consumeSpaces()
-    .matchLabel()
-
-
-proc isInitializer(afterVar: Parser): Parser =
-  afterVar
-    .consumeSpaces()
-    .matchSymbols("=")
 
 
 proc isDeclaration(lines: string): Parser =
@@ -92,20 +82,41 @@ proc processImport(self: var Evaluator, lines: string, evaluation: var Evaluatio
   return true
 
 
-proc initializer(parser: Parser): string =
-  let initializerResult = parser.isInitializer()
-  return if initializerResult.ok: initializerResult.text else: ""
+proc getType(parser: var Parser): string =
+  let typeParser = parser
+    .consumeSpaces()
+    .matchSymbols(":")
+    .consumeSpaces()
+    .matchLabel()
+
+  if typeParser.ok:
+    parser = typeParser
+    return parser.tokens[^1]
+
+  return ""
+
+
+proc getInitializer(parser: var Parser): string =
+  let initialiserParser = parser
+    .consumeSpaces()
+    .matchSymbols("=")
+
+  if initialiserParser.ok:
+    parser = initialiserParser
+    return initialiserParser.text
+
+  return ""
 
 
 proc processVariableDeclaration(self: var Evaluator, lines: string, evaluation: var Evaluation): bool =
-  let varDeclResult = lines.isVariableDeclaration()
+  var varDeclResult = lines.isVariableDeclaration()
   if not varDeclResult.ok:
     return false
 
   let declarer = varDeclResult.tokens[0].toDeclarerKind()
   let label = varDeclResult.tokens[1]
-  let typ = varDeclResult.tokens[3].strip()
-  let initializer = varDeclResult.initializer()
+  let typ = varDeclResult.getType()
+  let initializer = varDeclResult.getInitializer()
 
   self.vm.declareVar(declarer, label, typ, initializer)
 

@@ -34,23 +34,23 @@ suite "Reploid VM should:":
 
 
   test "declare a variable":
-    vm.declareVar("var", "x", "int", "20")
+    vm.declareVar(DeclarerKind.Var, "x", "int", "20")
 
     result = vm.updateState()
-    check result == ("", 0)
+    assert result[1] == 0, "Failed to update state: " & result[0]
 
     result = vm.runCommand("x")
     check result == ("'20' type: int", 0)
 
 
   test "update the value of a variable":
-    vm.declareVar("var", "x", "int", "20")
+    vm.declareVar(DeclarerKind.Var, "x", "int", "20")
 
     result = vm.updateState()
-    check result == ("", 0)
+    assert result[1] == 0, "Failed to update state: " & result[0]
 
     result = vm.runCommand("inc x")
-    check result == ("", 0)
+    assert result[1] == 0, "Failed to run command: " & result[0]
 
     result = vm.runCommand("x")
     check result == ("'21' type: int", 0)
@@ -58,7 +58,7 @@ suite "Reploid VM should:":
 
   test "update many times the value of a variable":
     let start = 20
-    vm.declareVar("var", "x", "int", $start)
+    vm.declareVar(DeclarerKind.Var, "x", "int", $start)
 
     result = vm.updateState()
     check result == ("", 0)
@@ -73,10 +73,10 @@ suite "Reploid VM should:":
 
   test "initialize a string variable":
     let value = "Protobot."
-    vm.declareVar("var", "x", "string", "\"" & value & "\"")
+    vm.declareVar(DeclarerKind.Var, "x", "string", "\"" & value & "\"")
 
     result = vm.updateState()
-    check result == ("", 0)
+    assert result[1] == 0, "Failed to update state: " & result[0]
 
     result = vm.runCommand("x")
     check result == ("'" & value & "' type: string", 0)
@@ -86,16 +86,16 @@ suite "Reploid VM should:":
     vm.declareImport("strutils")
 
     result = vm.updateImports()
-    check result[1] == 0
+    assert result[1] == 0, "Failed to update imports: " & result[0]
 
     result = vm.runCommand("@[\"Imports\", \"are\", \"working.\"].join(\" \")")
     check result == ("'Imports are working.' type: string", 0)
 
 
-  test "import a local source file":
+  test "properly handle reference objects":
     vm.declareImport("test/localcode")
     result = vm.updateImports()
-    check result[1] == 0
+    assert result[1] == 0, "Failed to update imports: " & result[0]
 
     result = vm.runCommand("newTest(\"Test\", 10)")
     check result == ("'[name: Test count: 10]' type: Test", 0)
@@ -111,12 +111,22 @@ suite "Reploid VM should:":
         r: R
         s: seq[int]
     """.unindent(6))
+    result = vm.updateDeclarations()
+    assert result[1] == 0, "Failed to update declarations: " & result[0]
 
-    discard vm.updateDeclarations()
-    vm.declareVar("var", "o", "O", "")
+    vm.declareVar(DeclarerKind.Var, "o", "O", "")
+    result = vm.updateState()
+    assert result[1] == 0, "Failed to update state: " & result[0]
 
-    discard vm.updateState()
-    vm.declareVar("var", "u", "O", "")
+    vm.declareVar(DeclarerKind.Var, "u", "O", "")
+    result = vm.updateState()
+    check result[1] == 0
 
-    discard vm.updateState()
-    check result == ("", 0)
+
+  test "infer types of a simple variable":
+    vm.declareVar(DeclarerKind.Var, "x", initializer = "\"Protobot.\"")
+    result = vm.updateState()
+    assert result[1] == 0, "Failed to update state: " & result[0]
+
+    result = vm.runCommand("x")
+    check result == ("'Protobot.' type: string", 0)

@@ -7,6 +7,8 @@ import sequtils
 import strutils
 import compiler
 import temple
+import strformat
+import tables
 
 
 const nimExt* = ".nim"
@@ -20,8 +22,7 @@ const templatesPath = "templates"
 
 const stateTemplate =             staticRead(templatesPath/"state" & templateExt)
 const commandTemplate =           staticRead(templatesPath/"command" & templateExt)
-const getAccessorTemplate =       staticRead(templatesPath/"getaccessor" & templateExt)
-const setAccessorTemplate =       staticRead(templatesPath/"setaccessor" & templateExt)
+const varDeclarationTemplate =    staticRead(templatesPath/"vardeclaration" & templateExt)
 const getAccessorSymbolTemplate = staticRead(templatesPath/"getaccessorsymbol" & templateExt)
 const setAccessorSymbolTemplate = staticRead(templatesPath/"setaccessorsymbol" & templateExt)
 const stateUpdaterTemplate =      staticRead(templatesPath/"stateupdater" & templateExt)
@@ -47,8 +48,7 @@ var commandId: int = 0
 type ReploidVM* = object
   stateTemplate: string
   commandTemplate: string
-  getAccessorTemplate: string
-  setAccessorTemplate: string
+  varDeclarationTemplate: string
   getAccessorSymbolTemplate: string
   setAccessorSymbolTemplate: string
   stateUpdaterTemplate: string
@@ -82,25 +82,22 @@ proc `$`(self: DeclarerKind): string =
   of DeclarerKind.Var: "var"
 
 
-proc varDeclaration(self: VariableDeclaration): string =
-  var initializer = if self.initializer.len > 0: " = " & self.initializer else: ""
-  $self.declarer & " " & self.name & "* : " & self.typ & initializer
+proc varDeclaration(self: ReploidVM, variable: VariableDeclaration): string =
+  self.varDeclarationTemplate.replace(
+    ("declarer", $variable.declarer),
+    ("name", variable.name),
+    ("type", if variable.typ.len > 0: " : " & variable.typ else: ""),
+    ("initializer", if variable.initializer.len > 0: " = " & variable.initializer else: "")
+  )
 
 
 proc getAccessor(self: ReploidVM, variable: VariableDeclaration): string =
-  self.getAccessorTemplate.replace(
-    ("name", variable.name),
-    ("casedName", variable.name.cased),
-    ("type", variable.typ)
-  )
+  fmt"genGetter({variable.name}, typeof({variable.name}))"
 
 
 proc setAccessor(self: ReploidVM, variable: VariableDeclaration): string =
-  self.setAccessorTemplate.replace(
-    ("name", variable.name),
-    ("casedName", variable.name.cased),
-    ("type", variable.typ)
-  )
+  fmt"genSetter({variable.name}, typeof({variable.name}))"
+
 
 proc accessors(self: ReploidVM, variable: VariableDeclaration): string =
     result = self.getAccessor(variable)
@@ -161,7 +158,7 @@ proc generateStateSource(self: ReploidVM, variables: seq[VariableDeclaration]): 
   let oldVariables = self.variables
 
   let variableDeclarations = variables
-    .mapIt(varDeclaration(it))
+    .mapIt(self.varDeclaration(it))
     .join("\n")
 
   let accessorsDeclarations = variables
@@ -216,14 +213,28 @@ proc generateCommandSource(self: ReploidVM, command: string): string =
   )
 
 
+proc inferTypes(self: var ReploidVM, output: string) =
+  const tag = ":reploid var decl:"
+  let varTypes = output.splitLines()
+    .mapIt((it.find(tag), it))
+    .filterIt(it[0] != -1)
+    .mapIt(it[1][(it[0] + tag.len)..^1])
+    .mapIt(it.split(":"))
+    .mapIt((it[0], it[1]))
+    .toTable()
+
+  for i in 0 ..< self.newVariables.len:
+    if self.newVariables[i].typ.len == 0:
+      self.newVariables[i].typ = varTypes[self.newVariables[i].name]
+
+
 proc newReploidVM*(compiler: Compiler, tempPath: string = getTempDir()): ReploidVM =
   result = ReploidVM(
     compiler: compiler,
 
     stateTemplate: stateTemplate,
     commandTemplate: commandTemplate,
-    getAccessorTemplate: getAccessorTemplate,
-    setAccessorTemplate: setAccessorTemplate,
+    varDeclarationTemplate: varDeclarationTemplate,
     getAccessorSymbolTemplate: getAccessorSymbolTemplate,
     setAccessorSymbolTemplate: setAccessorSymbolTemplate,
     stateUpdaterTemplate: stateUpdaterTemplate,
@@ -248,7 +259,10 @@ proc declareImport*(self: var ReploidVM, declaration: string) =
   self.newImports.add("import " & declaration)
 
 
-proc declareVar*(self: var ReploidVM, declarer: DeclarerKind, name: string, typ: string, initializer: string = "") =
+proc declareVar*(self: var ReploidVM, declarer: DeclarerKind, name: string, typ: string = "", initializer: string = "") =
+  if typ.len == 0 and initializer.len == 0:
+    raise newException(Exception, "Type or initializer is required for variable declaration: " & name)
+
   let declaration = VariableDeclaration(declarer: declarer, name: name, typ: typ, initializer: initializer)
   self.newVariables.add(declaration)
 
@@ -270,6 +284,7 @@ proc updateImports*(self: var ReploidVM): (string, int) =
     self.imports.add(self.newImports)
 
   self.newImports = @[]
+  result[0] = ""
 
 
 proc updateDeclarations*(self: var ReploidVM): (string, int) =
@@ -285,6 +300,7 @@ proc updateDeclarations*(self: var ReploidVM): (string, int) =
     self.declarations.add(self.newDeclarations)
 
   self.newDeclarations = @[]
+  result[0] = ""
 
 
 proc updateState*(self: var ReploidVM): (string, int) =
@@ -294,17 +310,18 @@ proc updateState*(self: var ReploidVM): (string, int) =
   let libPath = self.statePath & $stateId & libExt
 
   srcPath.writeFile(source)
-
   result = self.compiler.compileLibrary(srcPath, libPath)
 
   if not result.isSuccess:
     self.newVariables = @[]
     return result
 
+  self.inferTypes(result[0])
+  let inferredVariables = self.variables & self.newVariables
+
   let newState = loadLib(libPath)
   let nimMain = cast[proc(){.cdecl.}](newState.symAddr("NimMain"))
   let initialize = cast[Initialize](newState.symAddr("initialize"))
-
 
   if nimMain.isNil:
     raise newException(Exception, "Failed to get 'NimMain' symbol from state library: " & libPath)
@@ -319,8 +336,9 @@ proc updateState*(self: var ReploidVM): (string, int) =
 
   inc stateId
   self.states.add(newState)
-  self.variables = newVariables
+  self.variables = inferredVariables
   self.newVariables = @[]
+  result[0] = ""
 
 
 proc runCommand*(self: var ReploidVM, command: string): (string, int) =

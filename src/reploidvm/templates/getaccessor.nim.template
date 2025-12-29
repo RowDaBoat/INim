@@ -1,2 +1,0 @@
-proc get{casedName}*(): {type} {.exportc, dynlib, stdcall.} =
-  result = {name}
