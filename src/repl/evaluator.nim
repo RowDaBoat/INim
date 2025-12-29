@@ -60,6 +60,13 @@ proc isDeclaration(lines: string): Parser =
     .consumeSpaces()
 
 
+proc toDeclarerKind(text: string): DeclarerKind =
+  case text:
+  of "const": return DeclarerKind.Const
+  of "let": return DeclarerKind.Let
+  of "var": return DeclarerKind.Var
+
+
 proc processCommand(self: var Evaluator, lines: string, evaluation: var Evaluation): bool =
   let (isCommand, command, args) = self.getCommand(lines)
 
@@ -85,20 +92,22 @@ proc processImport(self: var Evaluator, lines: string, evaluation: var Evaluatio
   return true
 
 
+proc initializer(parser: Parser): string =
+  let initializerResult = parser.isInitializer()
+  return if initializerResult.ok: initializerResult.text else: ""
+
+
 proc processVariableDeclaration(self: var Evaluator, lines: string, evaluation: var Evaluation): bool =
   let varDeclResult = lines.isVariableDeclaration()
   if not varDeclResult.ok:
     return false
 
-  let declarer = varDeclResult.tokens[0]
+  let declarer = varDeclResult.tokens[0].toDeclarerKind()
   let label = varDeclResult.tokens[1]
   let typ = varDeclResult.tokens[3].strip()
+  let initializer = varDeclResult.initializer()
 
-  let initializerResult = varDeclResult.isInitializer()
-  if initializerResult.ok:
-    self.vm.declareVar(declarer, label, typ, initializerResult.text)
-  else:
-    self.vm.declareVar(declarer, label, typ)
+  self.vm.declareVar(declarer, label, typ, initializer)
 
   let updateStateResult = self.vm.updateState()
 

@@ -5,7 +5,6 @@ import os
 import dynlib
 import sequtils
 import strutils
-
 import compiler
 import temple
 
@@ -21,7 +20,8 @@ const templatesPath = "templates"
 
 const stateTemplate =             staticRead(templatesPath/"state" & templateExt)
 const commandTemplate =           staticRead(templatesPath/"command" & templateExt)
-const accessorsTemplate =         staticRead(templatesPath/"accessors" & templateExt)
+const getAccessorTemplate =      staticRead(templatesPath/"getaccessor" & templateExt)
+const setAccessorTemplate =      staticRead(templatesPath/"setaccessor" & templateExt)
 const getAccessorSymbolTemplate = staticRead(templatesPath/"getaccessorsymbol" & templateExt)
 const setAccessorSymbolTemplate = staticRead(templatesPath/"setaccessorsymbol" & templateExt)
 const stateUpdaterTemplate =      staticRead(templatesPath/"stateupdater" & templateExt)
@@ -31,10 +31,11 @@ const saveStateTemplate =         staticRead(templatesPath/"savestate" & templat
 
 type Initialize* = proc(oldStateLib: pointer) {.stdcall.}
 type Run* = proc(state: pointer): string {.stdcall.}
+type DeclarerKind* = enum Const, Let, Var
 
 
 type VariableDeclaration* = object
-  declarer*: string
+  declarer*: DeclarerKind
   name*: string
   typ*: string
   initializer*: string
@@ -46,7 +47,8 @@ var commandId: int = 0
 type ReploidVM* = object
   stateTemplate: string
   commandTemplate: string
-  accessorsTemplate: string
+  getAccessorTemplate: string
+  setAccessorTemplate: string
   getAccessorSymbolTemplate: string
   setAccessorSymbolTemplate: string
   stateUpdaterTemplate: string
@@ -73,18 +75,38 @@ proc cased(value: string): string =
   result[0] = result[0].toUpperAscii()
 
 
-proc declaration(self: VariableDeclaration): string =
+proc `$`(self: DeclarerKind): string =
+  case self:
+  of DeclarerKind.Const: "const"
+  of DeclarerKind.Let: "let"
+  of DeclarerKind.Var: "var"
+
+
+proc varDeclaration(self: VariableDeclaration): string =
   var initializer = if self.initializer.len > 0: " = " & self.initializer else: ""
-  self.declarer & " " & self.name & "* : " & self.typ & initializer
+  $self.declarer & " " & self.name & "* : " & self.typ & initializer
 
 
-proc accessors(self: ReploidVM, variable: VariableDeclaration): string =
-  self.accessorsTemplate.replace(
+proc getAccessor(self: ReploidVM, variable: VariableDeclaration): string =
+  self.getAccessorTemplate.replace(
     ("name", variable.name),
     ("casedName", variable.name.cased),
     ("type", variable.typ)
   )
 
+
+proc setAccessor(self: ReploidVM, variable: VariableDeclaration): string =
+  self.setAccessorTemplate.replace(
+    ("name", variable.name),
+    ("casedName", variable.name.cased),
+    ("type", variable.typ)
+  )
+
+proc accessors(self: ReploidVM, variable: VariableDeclaration): string =
+    result = self.getAccessor(variable)
+
+    if variable.declarer == DeclarerKind.Var:
+      result &= "\n" & self.setAccessor(variable)
 
 proc loadOldGetAccessor(self: ReploidVM, variable: VariableDeclaration): string =
   self.getAccessorSymbolTemplate.replace(
@@ -122,6 +144,7 @@ proc loadSetAccessor(self: ReploidVM, variable: VariableDeclaration): string =
 
 proc loadState(self: ReploidVM, variable: VariableDeclaration): string =
   self.loadStateTemplate.replace(
+    ("declarer", if variable.declarer == DeclarerKind.Var: "var" else: "let"),
     ("bindingName", variable.name),
     ("casedSymbolName", variable.name.cased),
   )
@@ -135,10 +158,25 @@ proc saveState(self: ReploidVM, variable: VariableDeclaration): string =
 
 
 proc generateStateSource(self: ReploidVM, variables: seq[VariableDeclaration]): string =
-  let variableDeclarations = variables.mapIt(declaration(it)).join("\n")
-  let accessorsDeclarations = variables.mapIt(self.accessors(it)).join("\n")
-  let loadOldGetAccessors = self.variables.mapIt(self.loadOldGetAccessor(it)).join("\n")
-  let updateState = self.variables.mapIt(self.stateUpdater(it)).join("\n")
+  let oldVariables = self.variables
+
+  let variableDeclarations = variables
+    .mapIt(varDeclaration(it))
+    .join("\n")
+
+  let accessorsDeclarations = variables
+    .mapIt(self.accessors(it))
+    .join("\n")
+
+  let loadOldGetAccessors = oldVariables
+    .filterIt(it.declarer == DeclarerKind.Var)
+    .mapIt(self.loadOldGetAccessor(it))
+    .join("\n")
+
+  let updateState = oldVariables
+    .filterIt(it.declarer == DeclarerKind.Var)
+    .mapIt(self.stateUpdater(it))
+    .join("\n")
 
   return self.stateTemplate.replace(
     ("variableDeclarations", variableDeclarations),
@@ -149,10 +187,25 @@ proc generateStateSource(self: ReploidVM, variables: seq[VariableDeclaration]): 
 
 
 proc generateCommandSource(self: ReploidVM, command: string): string =
-  let loadGetAccessors = self.variables.mapIt(self.loadGetAccessor(it)).join("\n")
-  let loadSetAccessors = self.variables.mapIt(self.loadSetAccessor(it)).join("\n")
-  let loadState = self.variables.mapIt(self.loadState(it)).join("\n")
-  let saveState = self.variables.mapIt(self.saveState(it)).join("\n")
+  let variables = self.variables
+
+  let loadGetAccessors = variables
+    .mapIt(self.loadGetAccessor(it))
+    .join("\n")
+
+  let loadSetAccessors = variables
+    .filterIt(it.declarer == DeclarerKind.Var)
+    .mapIt(self.loadSetAccessor(it))
+    .join("\n")
+
+  let loadState = variables
+    .mapIt(self.loadState(it))
+    .join("\n")
+
+  let saveState = variables
+    .filterIt(it.declarer == DeclarerKind.Var)
+    .mapIt(self.saveState(it))
+    .join("\n")
 
   self.commandTemplate.replace(
     ("loadGetAccessors", loadGetAccessors),
@@ -169,7 +222,8 @@ proc newReploidVM*(compiler: Compiler, tempPath: string = getTempDir()): Reploid
 
     stateTemplate: stateTemplate,
     commandTemplate: commandTemplate,
-    accessorsTemplate: accessorsTemplate,
+    getAccessorTemplate: getAccessorTemplate,
+    setAccessorTemplate: setAccessorTemplate,
     getAccessorSymbolTemplate: getAccessorSymbolTemplate,
     setAccessorSymbolTemplate: setAccessorSymbolTemplate,
     stateUpdaterTemplate: stateUpdaterTemplate,
@@ -194,7 +248,7 @@ proc declareImport*(self: var ReploidVM, declaration: string) =
   self.newImports.add("import " & declaration)
 
 
-proc declareVar*(self: var ReploidVM, declarer: string, name: string, typ: string, initializer: string = "") =
+proc declareVar*(self: var ReploidVM, declarer: DeclarerKind, name: string, typ: string, initializer: string = "") =
   let declaration = VariableDeclaration(declarer: declarer, name: name, typ: typ, initializer: initializer)
   self.newVariables.add(declaration)
 

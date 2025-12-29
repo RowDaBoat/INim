@@ -1,1 +1,1 @@
-var {bindingName} = get{casedSymbolName}()
+{declarer} {bindingName} = get{casedSymbolName}()
