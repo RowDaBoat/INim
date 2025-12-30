@@ -5,6 +5,8 @@ Reploid is a Nim REPL originally forked from [INim](https://github.com/inim-repl
 INim simulated the REPL behavior by re-running all the previous commands each time, and hiding the output of previous commands. Reploid instead runs each command just once by using its own virtual machine to keep track of the state.
 
 
+![Reploid Showcase](docs/reploid.png)
+
 ## Features
 
 ### Already implemented
@@ -12,6 +14,7 @@ INim simulated the REPL behavior by re-running all the previous commands each ti
 - It is available to be used as a CLI tool or as a library to integrate into other applications.
 - Run it with a single call to `reploid()`, or build your own `REPL` using the nuts and bolts provided by the library.
 - Automatic indentation (`if`, `for`, `proc`, `var`, ...)
+- Offers preloading imports through the command line or configuration file.
 - Command history support
 - Uses `nim` compiler in PATH, or a custom path. 
 - Can be configured through command line arguments or a configuration file.
