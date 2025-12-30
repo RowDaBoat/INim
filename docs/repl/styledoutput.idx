@@ -1,0 +1,15 @@
+nimTitle	styledoutput	repl/styledoutput.html	module src/repl/styledoutput		0
+nim	ColorScheme	repl/styledoutput.html#ColorScheme	object ColorScheme		10
+nim	Output	repl/styledoutput.html#Output	object Output		15
+nim	colorScheme	repl/styledoutput.html#colorScheme,ForegroundColor,bool,BackgroundColor,bool	proc colorScheme(fgColor: ForegroundColor = fgDefault; fgBright: bool = false;\n            bgColor: BackgroundColor = bgDefault; bgBright: bool = false): ColorScheme		25
+nim	newOutput	repl/styledoutput.html#newOutput,bool,ColorScheme,ColorScheme,ColorScheme,ColorScheme,ColorScheme,ColorScheme,ColorScheme	proc newOutput(colors: bool = true; nim: ColorScheme = colorScheme(fgYellow, true);\n          promptMessage: ColorScheme = colorScheme(fgYellow, false);\n          promptSymbol: ColorScheme = colorScheme();\n          okResult: ColorScheme = colorScheme(fgCyan, false);\n          info: ColorScheme = colorScheme();\n          warning: ColorScheme = colorScheme(fgYellow, false);\n          error: ColorScheme = colorScheme(fgRed, false)): Output		37
+nim	write	repl/styledoutput.html#write,Output,string,ColorScheme	proc write(self: Output; message: string; color: ColorScheme = colorScheme())		68
+nim	nim	repl/styledoutput.html#nim,Output,string	proc nim(self: Output; message: string)		84
+nim	promptMessage	repl/styledoutput.html#promptMessage,Output,string	proc promptMessage(self: Output; message: string)		89
+nim	promptSymbol	repl/styledoutput.html#promptSymbol,Output,string	proc promptSymbol(self: Output; message: string)		94
+nim	okResult	repl/styledoutput.html#okResult,Output,string	proc okResult(self: Output; message: string)		99
+nim	info	repl/styledoutput.html#info,Output,string	proc info(self: Output; message: string)		104
+nim	warning	repl/styledoutput.html#warning,Output,string	proc warning(self: Output; message: string)		109
+nim	error	repl/styledoutput.html#error,Output,string	proc error(self: Output; message: string)		114
+nim	unstyled	repl/styledoutput.html#unstyled,Output,string	proc unstyled(self: Output; message: string)		119
+nim	styledPrompt	repl/styledoutput.html#styledPrompt,Output,string,string	proc styledPrompt(self: Output; message: string; symbol: string): Styler		124

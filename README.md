@@ -6,23 +6,28 @@ INim simulated the REPL behavior by re-running all the previous commands each ti
 
 
 ## Features
+
+### Already implemented
+- Tested on Linux, MacOS, BSD and Windows
+- It is available to be used as a CLI tool or as a library to integrate into other applications.
+- Run it with a single call to `reploid()`, or build your own `REPL` using the nuts and bolts provided by the library.
 - Automatic indentation (`if`, `for`, `proc`, `var`, ...)
 - Command history support
 - Uses `nim` compiler in PATH, or a custom path. 
 - Can be configured through command line arguments or a configuration file.
 - Setup one or more pre-imported preludes.
 - Prints out value and type of expressions.
-- Runs in the current directory, `import` modules relative to the current directory.
+- Runs in the current directory, `import` global modules, or modules relative to the current directory.
 - Colorized output
 - Nim compiler options can be specified with the `--flags` option (ie: `reploid --flags=DEBUG,ssl`)
 
-
-### Planned features
-- Run on Linux, MacOS and Windows
+### Planned 
 - Edit lines using `$EDITOR` (Ctrl-X)
 
 
-## Confiugrations and arguments
+## Documentation
+
+### Confiugrations and arguments
 - **nim**: path to the nim compiler, default is just `nim`
 - **welcome**: enable/disable the welcome message, enabled by default
 - **flags**: comma separated list of flags to pass to the nim compiler
@@ -31,15 +36,30 @@ INim simulated the REPL behavior by re-running all the previous commands each ti
 - **colors**: enabel/disable colors, enabled by default
 - **help**: show the help message
 
-## Commands
+## Built-in commands
  - **imports**: shows all imports
  - **declarations**: shows all type and proc declarations
  - **quit**: quits reploid
  - **help**: show this help message
+
+### Quick start
+From the command line:
+```bash
+nimble install https://github.com/RowDaBoat/reploid.git
+reploid
+```
+
+On your nim code:
+```nim
+import reploid
+reploid.reploid()
+```
+
+### API Reference
+The full API reference is available [here](https://rowdaboat.github.io/reploid/reploid.html)
 
 
 ## Limitations
 - **Compilation times**: since `reploid`'s vm uses `nim`'s compiler to compile commands and declarations it takes some time to run each. This could be mitigated by a faster compiler like `tcc`, but `tcc` has not yet implemented inline assembly for the `arm64` architecture, which is needed to compile `nim` on `MacOS`. Once `tcc` implements this, it will be integrated into `reploid`.
 
 - **Declared procs cannot access variable declarations**: due to how the vm lays out procs and variable declarations, they cannot be accessed from procs. This design decision was taken to avoid greater compilation times.
-

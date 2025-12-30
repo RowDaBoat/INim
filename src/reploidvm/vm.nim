@@ -229,6 +229,7 @@ proc inferTypes(self: var ReploidVM, output: string) =
 
 
 proc newReploidVM*(compiler: Compiler, tempPath: string = getTempDir()): ReploidVM =
+  ## Creates a new ReploidVM with the given compiler and temporary path.
   result = ReploidVM(
     compiler: compiler,
 
@@ -251,15 +252,27 @@ proc newReploidVM*(compiler: Compiler, tempPath: string = getTempDir()): Reploid
   (result.statePath & nimExt).writeFile("")
   (result.commandPath & nimExt).writeFile("")
 
+
 proc isSuccess*(toCheck: (string, int)): bool =
+  ## Checks if the given result is successful.
   toCheck[1] == 0
 
 
 proc declareImport*(self: var ReploidVM, declaration: string) =
+  ## Declares a new import.
+  ## This will not be effective until `updateImports` is called.
   self.newImports.add("import " & declaration)
 
 
 proc declareVar*(self: var ReploidVM, declarer: DeclarerKind, name: string, typ: string = "", initializer: string = "") =
+  ## Declares a new variable.
+  ## This will not be effective until `updateState` is called.
+  ## `declarer`: declarer of the variable, corresponding to `const`, `let` or `var`.
+  ## `name`: name of the variable.
+  ## `typ`: type of the variable.
+  ## `initializer`: initial value of the variable.
+  ## one or both of `typ` and `initializer` are required.
+  ## **Note: code in `initializer` should never side-effect, as it will be executed each time `updateState` is called.**
   if typ.len == 0 and initializer.len == 0:
     raise newException(Exception, "Type or initializer is required for variable declaration: " & name)
 
@@ -268,10 +281,14 @@ proc declareVar*(self: var ReploidVM, declarer: DeclarerKind, name: string, typ:
 
 
 proc declare*(self: var ReploidVM, declaration: string) =
+  ## Declares a new `proc`, `template`, `macro`, `iterator`, etc. and/or `type`.
+  ## This will not be effective until `updateDeclarations` is called.
   self.newDeclarations.add(declaration)
 
 
 proc updateImports*(self: var ReploidVM): (string, int) =
+  ## Updates the imports.
+  ## Compiles all declared imports and returns a success or an error.
   let imports = self.imports & self.newImports
   let source = imports.join("\n")
   let srcPath = self.importsPath & nimExt
@@ -288,6 +305,8 @@ proc updateImports*(self: var ReploidVM): (string, int) =
 
 
 proc updateDeclarations*(self: var ReploidVM): (string, int) =
+  ## Updates the declarations.
+  ## Compiles all declarations and returns a success or an error.
   let declarations = self.declarations & self.newDeclarations
   let source = declarations.join("\n\n")
   let srcPath = self.declarationsPath & nimExt
@@ -304,6 +323,8 @@ proc updateDeclarations*(self: var ReploidVM): (string, int) =
 
 
 proc updateState*(self: var ReploidVM): (string, int) =
+  ## Updates the state's structure, initializes the new variables while keeping the values of the previous state.
+  ## Compiles all variable declarations, and returns a success or an error.
   let newVariables = self.variables & self.newVariables
   let source = self.generateStateSource(newVariables)
   let srcPath = self.statePath & nimExt
@@ -342,6 +363,8 @@ proc updateState*(self: var ReploidVM): (string, int) =
 
 
 proc runCommand*(self: var ReploidVM, command: string): (string, int) =
+  ## Runs a command.
+  ## Compiles the command, runs it, and returns a success or an error.
   let srcPath = self.commandPath & nimExt
   let source = self.generateCommandSource(command)
   srcPath.writeFile(source)
@@ -371,26 +394,31 @@ proc runCommand*(self: var ReploidVM, command: string): (string, int) =
 
 
 proc importsSource*(self: ReploidVM): string =
+  ## Returns the source code of the imports.
   self.importsPath & nimExt & ":\n" &
   readFile(self.importsPath & nimExt)
 
 
 proc declarationsSource*(self: ReploidVM): string =
+  ## Returns the source code of the declarations.
   self.declarationsPath & nimExt & ":\n" &
   readFile(self.declarationsPath & nimExt)
 
 
 proc commandSource*(self: ReploidVM): string =
+  ## Returns the source code of the command.
   self.commandPath & nimExt & ":\n" &
   readFile(self.commandPath & nimExt)
 
 
 proc stateSource*(self: ReploidVM): string =
+  ## Returns the source code of the state.
   self.statePath & nimExt & ":\n" &
   readFile(self.statePath & nimExt)
 
 
 proc clean*(self: var ReploidVM) =
+  ## Cleans up the vm, unloading all state libraries.
   for state in self.states:
     unloadLib(state)
 

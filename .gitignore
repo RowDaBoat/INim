@@ -3,3 +3,4 @@ bin/
 .vscode
 *.local
 reploid
+.DS_Store

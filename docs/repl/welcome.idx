@@ -1,0 +1,4 @@
+nimTitle	welcome	repl/welcome.html	module src/repl/welcome		0
+nim	NimblePkgVersion	repl/welcome.html#NimblePkgVersion	const NimblePkgVersion		8
+nim	Welcome	repl/welcome.html#Welcome	object Welcome		11
+nim	welcome	repl/welcome.html#welcome,Output,string	proc welcome(output: Output; nim: string)		43

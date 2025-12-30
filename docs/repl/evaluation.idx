@@ -1,0 +1,7 @@
+nimTitle	evaluation	repl/evaluation.html	module src/repl/evaluation		0
+nim	Empty	repl/evaluation.html#Empty	EvaluationKind.Empty		4
+nim	Success	repl/evaluation.html#Success	EvaluationKind.Success		4
+nim	Error	repl/evaluation.html#Error	EvaluationKind.Error		4
+nim	Quit	repl/evaluation.html#Quit	EvaluationKind.Quit		4
+nim	EvaluationKind	repl/evaluation.html#EvaluationKind	enum EvaluationKind		4
+nim	Evaluation	repl/evaluation.html#Evaluation	object Evaluation		6

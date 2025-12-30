@@ -41,6 +41,7 @@ proc path(output: Output, nim: string) =
 
 
 proc welcome*(output: Output, nim: string) =
+  ## Shows the welcome message with the Nim compiler version and path.
   output.nim("┬─┐┌─┐┌─┐┬  ┌─┐┬┌┬┐ "); output.reploidNameAndVersion()
   output.nim("├┬┘├┤ ├─┘│  │ ││ ││ "); output.nimVersion(nim)
   output.nim("┴└─└─┘┴  ┴─┘└─┘┴─┴┘ "); output.path(nim)

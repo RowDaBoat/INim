@@ -16,3 +16,6 @@ requires "https://github.com/jangko/nim-noise.git#master"
 
 task test, "Run the test suite":
   exec "nim r test/reploidvm.nim"
+
+task docs, "Generate documentation":
+  exec "nim doc --project --git.url:git@github.com:RowDaBoat/reploid.git --index:on --outdir:docs src/reploid.nim"

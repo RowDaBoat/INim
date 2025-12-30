@@ -1,0 +1,6 @@
+nimTitle	commands	commands/commands.html	module src/commands/commands		0
+nim	CommandsApi	commands/commands.html#CommandsApi	object CommandsApi		13
+nim	CommandProc	commands/commands.html#CommandProc	type CommandProc		19
+nim	Command	commands/commands.html#Command	object Command		22
+nim	command	commands/commands.html#command,string,string,CommandProc	proc command(name: string; help: string; run: CommandProc): Command		28
+nim	commands	commands/commands.html#commands,varargs[Command]	proc commands(commands: varargs[Command]): Table[string, Command]		51

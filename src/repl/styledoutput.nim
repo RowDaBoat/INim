@@ -44,6 +44,14 @@ proc newOutput*(
   warning: ColorScheme = colorScheme(fgYellow, false),
   error: ColorScheme = colorScheme(fgRed, false),
 ): Output =
+  ## Creates a new Output object with the given color schemes.
+  ## The object output schemes are
+  ## - prompt message and symbol: the console's prompt colors.
+  ## - ok result: colors for a succesful result.
+  ## - info: colors for information messages.
+  ## - warning: colors for warning messages.
+  ## - error: colors for error messages.
+  ## - nim: colors used just to stylize nim mentions.
   if not colors:
     let noColor = colorScheme()
     return Output(
@@ -58,6 +66,7 @@ proc newOutput*(
 
 
 proc write*(self: Output, message: string, color: ColorScheme = colorScheme()) =
+  ## Writes a message with the given color scheme.
   let fg = color.fg
   let bg = color.bg
 
@@ -73,38 +82,47 @@ proc write*(self: Output, message: string, color: ColorScheme = colorScheme()) =
 
 
 proc nim*(self: Output, message: string) =
+  ## Writes a message with the nim color scheme.
   self.write(message, self.nim)
 
 
 proc promptMessage*(self: Output, message: string) =
+  ## Writes a message with the prompt message color scheme.
   self.write(message, self.promptMessage)
 
 
 proc promptSymbol*(self: Output, message: string) =
+  ## Writes a message with the prompt symbol color scheme.
   self.write(message, self.promptSymbol)
 
 
 proc okResult*(self: Output, message: string) =
+  ## Writes a message with the ok result color scheme.
   self.write(message, self.okResult)
 
 
 proc info*(self: Output, message: string) =
+  ## Writes a message with the info color scheme.
   self.write(message, self.info)
 
 
 proc warning*(self: Output, message: string) =
+  ## Writes a message with the warning color scheme.
   self.write(message, self.warning)
 
 
 proc error*(self: Output, message: string) =
+  ## Writes a message with the error color scheme.
   self.write(message, self.error)
 
 
 proc unstyled*(self: Output, message: string) =
+  ## Writes a message without any color scheme.
   self.write(message, colorScheme())
 
 
 proc styledPrompt*(self: Output, message: string, symbol: string): Styler =
+  ## Creates a styled prompt with the given message and symbol.
   var styler = Styler.init()
   var messageFg = self.promptMessage.fg
   var messageBg = self.promptMessage.bg

@@ -177,10 +177,28 @@ proc newEvaluator*(
   commandsApi: CommandsApi,
   commands: Table[string, Command],
   vm: ReploidVM
-): Evaluator = Evaluator(commandsApi: commandsApi, vm: vm, commands: commands)
+): Evaluator =
+  ## Creates a new Evaluator object with the given commands and VM.
+  ## 
+  ## **Commands:**
+  ## `commands` is a table associating built-in command names with their implementations.
+  ## The `commandsApi` object contains the output, compiler and vm exposed to each command.
+  ## 
+  ## **ReploidVM:**
+  ## `vm` is the ReploidVM object that contains the state, declarations, imports, and runs nim code.
+  Evaluator(commandsApi: commandsApi, vm: vm, commands: commands)
 
 
 proc eval*(self: var Evaluator, input: Input): Evaluation =
+  ## Evaluates the given input, returning an Evaluation object.
+  ## 
+  ## **`Lines`:**
+  ## If the input kind is `Lines`, the lines are evaluated as declarations, nim code, or built-in commands from the commands table.
+  ## Evaluating to what the declaration, nim code, or built-in command evaluate to.
+  ## 
+  ## **`Reset`:** a reset input will clear the current line and start a new one. It evaluates to an `Empty` evaluation.
+  ## **`Editor`:** an editor input will open the editor to edit the current input (this is not implemented yet).
+  ## **`Quit` and `EOF`:** both will be evaluated to a `Quit` evaluation, exiting the REPL.
   case input.kind:
   of Lines: self.evaluateLines(input.lines)
   of Reset: Evaluation(kind: Empty)

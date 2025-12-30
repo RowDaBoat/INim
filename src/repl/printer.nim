@@ -40,10 +40,20 @@ proc printWithFormat(output: Output, lines: string, error: bool = false) =
 
 
 proc newPrinter*(output: Output): Printer =
+  ## Creates a new Printer object with the given output.
   Printer(output: output)
 
 
 proc print*(self: Printer, evaluation: Evaluation) =
+  ## Prints the given evaluation to the output.
+  ## 
+  ## **`Success`:** prints the result with the ok result color scheme.
+  ## **`Error`:** prints the result with the error color scheme.
+  ## **`Quit`, `Empty`:** do nothing.
+  ##
+  ## This printer discards everything before " Error: " or " Warning: " text while coloring the rest appropietly.
+  ## It also discards some contextual error and warning messages from the compiler.
+  ## This component is a rough draft, it should be improved in the future to better format the ouput and avoid some cases of unwanted coloring and discarding.
   case evaluation.kind:
   of Success:
     self.output.printWithFormat(evaluation.result)

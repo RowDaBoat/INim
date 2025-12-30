@@ -47,6 +47,7 @@ proc preloadImports(vm: var ReploidVM, imports: seq[string], output: Output) =
 
 
 proc defaultConfig*(): Configuration =
+  ## Returns the default configuration for reploid.
   let reploidDir = getHomeDir()/".reploid"
   result = Configuration(
     nim: "nim",
@@ -59,16 +60,19 @@ proc defaultConfig*(): Configuration =
   )
 
 
-proc defaultCommands*(): Table[string, Command] = commands(
-  command("source", "<imports|declarations|state|command> shows the source of imports, declarations, the current state, or the last command", sourceCmd),
-  command("quit", "quits reploid", quitCmd)
-)
+proc defaultCommands*(): Table[string, Command] =
+  ## Returns the default commands for reploid.
+  commands(
+    command("source", "<imports|declarations|state|command> shows the source of imports, declarations, the current state, or the last command", sourceCmd),
+    command("quit", "quits reploid", quitCmd)
+  )
 
 
 proc reploid*(
   configuration: Configuration = defaultConfig(),
   commands: Table[string, Command] = defaultCommands()
 ) =
+  ## Runs the reploid REPL with the given configuration and commands.
   let output = newOutput(colors = configuration.colors)
   let compiler = newNimCompiler(configuration.nim, configuration.flags)
 
@@ -99,7 +103,7 @@ proc reploid*(
     printer.print(evaluation)
     quit = evaluation.kind == Quit
 
-  reader.cleanup()
+  reader.close()
 
 
 proc createDirs(path: string) =
