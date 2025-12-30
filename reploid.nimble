@@ -6,7 +6,7 @@ author        = "RowDaBoat"
 description   = "Reploid: A Nim REPL"
 license       = "ISC"
 installDirs   = @["src"]
-installExt    = @["reploid"]
+installExt    = @["nim", "template"]
 bin           = @["reploid"]
 
 srcDir        = "src"

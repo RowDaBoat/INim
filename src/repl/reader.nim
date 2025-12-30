@@ -38,6 +38,7 @@ proc setIndentation(self: var Reader, indentationLevels: int) =
   let indentation = self.indentation.repeat(indentationLevels)
   self.noise.preloadBuffer(indentation, collapseWhitespaces = false)
 
+
 proc indent(line: string): bool =
   if line.len == 0:
     return

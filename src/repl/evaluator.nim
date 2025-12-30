@@ -69,10 +69,12 @@ proc processCommand(self: var Evaluator, lines: string, evaluation: var Evaluati
 
 proc processImport(self: var Evaluator, lines: string, evaluation: var Evaluation): bool =
   let importResult = lines.isImport()
+
   if not importResult.ok:
     return false
 
   self.vm.declareImport(importResult.text)
+
   let updateImportsResult = self.vm.updateImports()
 
   evaluation = Evaluation(
@@ -110,6 +112,7 @@ proc getInitializer(parser: var Parser): string =
 
 proc processVariableDeclaration(self: var Evaluator, lines: string, evaluation: var Evaluation): bool =
   var varDeclResult = lines.isVariableDeclaration()
+
   if not varDeclResult.ok:
     return false
 

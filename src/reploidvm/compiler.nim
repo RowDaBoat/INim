@@ -17,7 +17,6 @@ const compileLibraryCommand = [
     "--app:lib",
     "--noMain",
     "--verbosity=0",
-    #"--hints=off",
     "--path=./",
     "--passL:-w",
     "--define:release",

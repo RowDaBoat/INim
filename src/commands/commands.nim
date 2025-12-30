@@ -16,7 +16,7 @@ type CommandsApi* = object
   vm*: ReploidVM
 
 
-type CommandProc = proc(api: var CommandsApi, args: seq[string]): Evaluation
+type CommandProc* = proc(api: var CommandsApi, args: seq[string]): Evaluation
 
 
 type Command* = object

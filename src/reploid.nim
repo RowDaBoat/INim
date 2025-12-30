@@ -18,8 +18,12 @@ import commands/commands
 import commands/source
 import commands/quit
 
+export commands
+export source
+export quit
 
-type Configuration = object
+
+type Configuration* = object
   help    {.help: "Show this help message".}            : bool
   nim     {.help: "Path to the nim compiler".}          : string
   welcome {.help: "Show welcome message".}              : bool
