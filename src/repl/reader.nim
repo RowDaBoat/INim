@@ -80,8 +80,6 @@ proc readSingleLine(self: var Reader): Input =
       return Input(kind: Reset)
     of ktCtrlD:
       return Input(kind: Quit)
-    of ktCtrlX:
-      return Input(kind: Editor)
     else:
       return Input(kind: Lines, lines: "")
 
@@ -125,7 +123,6 @@ proc read*(self: var Reader): Input =
   ##
   ## **EOF and Signals:**
   ## - `Ctrl+D` is captured and returned as a `Quit` input.
-  ## - `Ctrl+X` is captured and returned as a `Editor` input.
   ## - `Ctrl+C` is captured and returned as a `Reset` input.
   ## - An `EOF` from `stdin` is returned as an `EOF` input.
   ##

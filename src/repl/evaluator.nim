@@ -197,11 +197,9 @@ proc eval*(self: var Evaluator, input: Input): Evaluation =
   ## Evaluating to what the declaration, nim code, or built-in command evaluate to.
   ## 
   ## **`Reset`:** a reset input will clear the current line and start a new one. It evaluates to an `Empty` evaluation.
-  ## **`Editor`:** an editor input will open the editor to edit the current input (this is not implemented yet).
   ## **`Quit` and `EOF`:** both will be evaluated to a `Quit` evaluation, exiting the REPL.
   case input.kind:
   of Lines: self.evaluateLines(input.lines)
   of Reset: Evaluation(kind: Empty)
-  of Editor: Evaluation(kind: Empty)
   of Quit: Evaluation(kind: Quit)
   of EOF: Evaluation(kind: Quit)

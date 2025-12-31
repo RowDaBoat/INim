@@ -1,7 +1,7 @@
 # ISC License
 # Copyright (c) 2025 RowDaBoat
 
-type InputKind* = enum Lines, Reset, Quit, Editor, EOF
+type InputKind* = enum Lines, Reset, Quit, EOF
 
 
 type Input* = object
@@ -11,8 +11,6 @@ type Input* = object
     of Reset:
       discard
     of Quit:
-      discard
-    of Editor:
       discard
     of EOF:
       discard

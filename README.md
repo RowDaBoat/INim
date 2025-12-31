@@ -24,9 +24,6 @@ INim simulated the REPL behavior by re-running all the previous commands each ti
 - Colorized output
 - Nim compiler options can be specified with the `--flags` option (ie: `reploid --flags=DEBUG,ssl`)
 
-### Planned 
-- Edit lines using `$EDITOR` (Ctrl-X)
-
 
 ## Documentation
 
