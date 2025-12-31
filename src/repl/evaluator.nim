@@ -121,6 +121,10 @@ proc processVariableDeclaration(self: var Evaluator, lines: string, evaluation: 
   let typ = varDeclResult.getType()
   let initializer = varDeclResult.getInitializer()
 
+  if typ.len == 0 and initializer.len == 0:
+    evaluation = Evaluation(kind: Error, result: "A type and/or an initializer are required to declare a variable.")
+    return true
+
   self.vm.declareVar(declarer, label, typ, initializer)
 
   let updateStateResult = self.vm.updateState()
