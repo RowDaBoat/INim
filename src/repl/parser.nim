@@ -20,9 +20,7 @@ proc match(line: string, patterns: varargs[string]): (bool, string) =
 
 
 proc startsAsLabelOrNumber(text: string): bool =
-  let alphaNumeric = text[0].isAlphaNumeric
-  let underscore = text[0] == '_'
-  text.len > 0 and (alphaNumeric or underscore)
+  text.len > 0 and (text[0].isAlphaNumeric or text[0] == '_')
 
 
 proc startsAsSymbol(text: string): bool =
