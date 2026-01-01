@@ -47,7 +47,7 @@ proc preloadImports(vm: var ReploidVM, imports: seq[string], output: Output) =
 
 
 proc defaultConfig*(): Configuration =
-  ## Returns the default configuration for reploid.
+  ## The default configuration for reploid.
   let reploidDir = getHomeDir()/".reploid"
   result = Configuration(
     nim: "nim",
@@ -61,7 +61,7 @@ proc defaultConfig*(): Configuration =
 
 
 proc defaultCommands*(): Table[string, Command] =
-  ## Returns the default commands for reploid.
+  ## The default commands for reploid.
   commands(
     command("source", "<imports|declarations|state|command> shows the source of imports, declarations, the current state, or the last command", sourceCmd),
     command("quit", "quits reploid", quitCmd)
@@ -92,7 +92,7 @@ proc reploid*(
   )
   var reader = newReader(output, historyFile = configuration.history)
   var evaluator = newEvaluator(commandsApi, commands, vm)
-  var printer = newPrinter(output)
+  var printer = newPrinter(output, vm)
   var quit = false
 
   vm.preloadImports(configuration.imports, output)

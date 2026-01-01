@@ -18,6 +18,7 @@ const libExt* =
   else: ".so"
 const templateExt = ".nim.template"
 const templatesPath = "templates"
+const checkSuffix = "check"
 
 
 const stateTemplate =             staticRead(templatesPath/"state" & templateExt)
@@ -45,7 +46,7 @@ type VariableDeclaration* = object
 var stateId: int = 0
 var commandId: int = 0
 
-type ReploidVM* = object
+type ReploidVM* = ref object
   stateTemplate: string
   commandTemplate: string
   varDeclarationTemplate: string
@@ -64,10 +65,11 @@ type ReploidVM* = object
   newDeclarations: seq[string]
   states: seq[LibHandle]
 
-  importsPath: string
-  declarationsPath: string
-  statePath: string
-  commandPath: string
+  tmpPath: string
+  importsBasePath: string
+  declarationsBasePath: string
+  stateBasePath: string
+  commandBasePath: string
 
 
 proc cased(value: string): string =
@@ -228,7 +230,7 @@ proc inferTypes(self: var ReploidVM, output: string) =
       self.newVariables[i].typ = varTypes[self.newVariables[i].name]
 
 
-proc newReploidVM*(compiler: Compiler, tempPath: string = getTempDir()): ReploidVM =
+proc newReploidVM*(compiler: Compiler, tmpPath: string = getTempDir()): ReploidVM =
   ## Creates a new ReploidVM with the given compiler and temporary path.
   result = ReploidVM(
     compiler: compiler,
@@ -242,15 +244,16 @@ proc newReploidVM*(compiler: Compiler, tempPath: string = getTempDir()): Reploid
     loadStateTemplate: loadStateTemplate,
     saveStateTemplate: saveStateTemplate,
 
-    importsPath: tempPath / "imports",
-    declarationsPath: tempPath / "declarations",
-    statePath: tempPath / "state",
-    commandPath: tempPath / "command"
+    tmpPath: tmpPath,
+    importsBasePath: tmpPath / "imports",
+    declarationsBasePath: tmpPath / "declarations",
+    stateBasePath: tmpPath / "state",
+    commandBasePath: tmpPath / "command"
   )
-  (result.importsPath & nimExt).writeFile("")
-  (result.declarationsPath & nimExt).writeFile("")
-  (result.statePath & nimExt).writeFile("")
-  (result.commandPath & nimExt).writeFile("")
+  (result.importsBasePath & nimExt).writeFile("")
+  (result.declarationsBasePath & nimExt).writeFile("")
+  (result.stateBasePath & nimExt).writeFile("")
+  (result.commandBasePath & nimExt).writeFile("")
 
 
 proc isSuccess*(toCheck: (string, int)): bool =
@@ -291,8 +294,8 @@ proc updateImports*(self: var ReploidVM): (string, int) =
   ## Compiles all declared imports and returns a success or an error.
   let imports = self.imports & self.newImports
   let source = imports.join("\n")
-  let checkSrcPath = self.importsPath & "check" & nimExt
-  let checkLibPath = self.importsPath & "check" & libExt
+  let checkSrcPath = self.importsBasePath & checkSuffix & nimExt
+  let checkLibPath = self.importsBasePath & checkSuffix & libExt
 
   checkSrcPath.writeFile(source)
   result = self.compiler.compileLibrary(checkSrcPath, checkLibPath)
@@ -302,7 +305,7 @@ proc updateImports*(self: var ReploidVM): (string, int) =
     result[0] = result[0].strip()
     return
 
-  let srcPath = self.importsPath & nimExt
+  let srcPath = self.importsBasePath & nimExt
   srcPath.writeFile(source)
   self.imports.add(self.newImports)
   self.newImports = @[]
@@ -314,8 +317,8 @@ proc updateDeclarations*(self: var ReploidVM): (string, int) =
   ## Compiles all declarations and returns a success or an error.
   let declarations = self.declarations & self.newDeclarations
   let source = declarations.join("\n\n")
-  let checkSrcPath = self.declarationsPath & "check" & nimExt
-  let checkLibPath = self.declarationsPath & "check" & libExt
+  let checkSrcPath = self.declarationsBasePath & checkSuffix & nimExt
+  let checkLibPath = self.declarationsBasePath & checkSuffix & libExt
 
   checkSrcPath.writeFile(source)
   result = self.compiler.compileLibrary(checkSrcPath, checkLibPath)
@@ -325,7 +328,7 @@ proc updateDeclarations*(self: var ReploidVM): (string, int) =
     result[0] = result[0].strip()
     return
 
-  let srcPath = self.declarationsPath & nimExt
+  let srcPath = self.declarationsBasePath & nimExt
   srcPath.writeFile(source)
   self.declarations.add(self.newDeclarations)
   self.newDeclarations = @[]
@@ -337,8 +340,8 @@ proc updateState*(self: var ReploidVM): (string, int) =
   ## Compiles all variable declarations, and returns a success or an error.
   let newVariables = self.variables & self.newVariables
   let source = self.generateStateSource(newVariables)
-  let srcPath = self.statePath & nimExt
-  let libPath = self.statePath & $stateId & libExt
+  let srcPath = self.stateBasePath & nimExt
+  let libPath = self.stateBasePath & $stateId & libExt
 
   srcPath.writeFile(source)
   result = self.compiler.compileLibrary(srcPath, libPath)
@@ -376,11 +379,11 @@ proc updateState*(self: var ReploidVM): (string, int) =
 proc runCommand*(self: var ReploidVM, command: string): (string, int) =
   ## Runs a command.
   ## Compiles the command, runs it, and returns a success or an error.
-  let srcPath = self.commandPath & nimExt
+  let srcPath = self.commandBasePath & nimExt
   let source = self.generateCommandSource(command)
   srcPath.writeFile(source)
 
-  let libPath = self.commandPath & $commandId & libExt
+  let libPath = self.commandBasePath & $commandId & libExt
   result = self.compiler.compileLibrary(srcPath, libPath)
 
   if not result.isSuccess:
@@ -405,28 +408,34 @@ proc runCommand*(self: var ReploidVM, command: string): (string, int) =
   unloadLib(commandLib)
 
 
-proc importsSource*(self: ReploidVM): string =
-  ## Returns the source code of the imports.
-  self.importsPath & nimExt & ":\n" &
-  readFile(self.importsPath & nimExt)
+proc importsPath*(self: ReploidVM): string =
+  ## Temporary path where the vm stores its imports.
+  self.importsBasePath & nimExt
 
 
-proc declarationsSource*(self: ReploidVM): string =
-  ## Returns the source code of the declarations.
-  self.declarationsPath & nimExt & ":\n" &
-  readFile(self.declarationsPath & nimExt)
+proc importsCheckPath*(self: ReploidVM): string =
+  ## Temporary path where the vm writes the last imports that were validated.
+  self.importsBasePath & checkSuffix & nimExt
 
 
-proc commandSource*(self: ReploidVM): string =
-  ## Returns the source code of the command.
-  self.commandPath & nimExt & ":\n" &
-  readFile(self.commandPath & nimExt)
+proc declarationsPath*(self: ReploidVM): string =
+  ## Temporary path where the vm stores its declarations.
+  self.declarationsBasePath & nimExt
 
 
-proc stateSource*(self: ReploidVM): string =
-  ## Returns the source code of the state.
-  self.statePath & nimExt & ":\n" &
-  readFile(self.statePath & nimExt)
+proc declarationsCheckPath*(self: ReploidVM): string =
+  ## Temporary path where the vm writes the last declarations that were validated.
+  self.declarationsBasePath & checkSuffix & nimExt
+
+
+proc commandPath*(self: ReploidVM): string =
+  ## Temporary path where the vm stored the last command.
+  self.commandBasePath & nimExt
+
+
+proc statePath*(self: ReploidVM): string =
+  ## Temporary path where the vm stored the last state.
+  self.stateBasePath & nimExt
 
 
 proc clean*(self: var ReploidVM) =

@@ -27,7 +27,7 @@ INim simulated the REPL behavior by re-running all the previous commands each ti
 
 ## Documentation
 
-### Confiugrations and arguments
+### Configurations and arguments
 - **nim**: path to the nim compiler, default is just `nim`
 - **welcome**: enable/disable the welcome message, enabled by default
 - **flags**: comma separated list of flags to pass to the nim compiler

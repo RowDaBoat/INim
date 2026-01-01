@@ -67,14 +67,7 @@ proc addHistory(self: var Reader, line: string) =
 
 
 proc readSingleLine(self: var Reader): Input =
-  var ok = false
-
-  try:
-    ok = self.noise.readLine()
-  except EOFError:
-    return Input(kind: EOF)
-
-  if not ok:
+  if not self.noise.readLine():
     case self.noise.getKeyType():
     of ktCtrlC:
       return Input(kind: Reset)
@@ -83,7 +76,10 @@ proc readSingleLine(self: var Reader): Input =
     else:
       return Input(kind: Lines, lines: "")
 
-  let line = self.noise.getLine()
+  var line =
+    try: self.noise.getLine()
+    except EOFError: return Input(kind: EOF)
+
   self.addHistory(line)
   return Input(kind: Lines, lines: line)
 

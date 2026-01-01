@@ -72,6 +72,24 @@ proc matchSymbols*(self: Parser, texts: varargs[string]): Parser =
   result.expected = texts.join(", ")
 
 
+proc matchInteger*(self: Parser): Parser =
+  if not self.ok:
+    return self
+
+  result = self
+  result.ok = false
+  result.expected = "an integer number"
+  var current = 0
+
+  while self.text[current].isDigit:
+    current += 1
+    result.ok = true
+
+  result.tokens.add(self.text[0 ..< current])
+  result.text = self.text[current..^1]
+  result.expected = ""
+
+
 proc consumeSpaces*(self: Parser): Parser =
   result = self
   result.text = result.text.strip(leading = true, trailing = false)
