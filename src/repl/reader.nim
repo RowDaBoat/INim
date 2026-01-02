@@ -27,7 +27,7 @@ const MatchLineEndIndentTriggers = [
 ]
 
 const BranchingTriggers = [
-  "if ", "elif ", "try ", "try:", "except ", "except:"
+  "if ","when", "elif ", "try ", "try:", "except ", "except:"
 ]
 
 proc setMainPrompt(self: var Reader) =
@@ -145,9 +145,19 @@ proc read*(self: var Reader): Input =
   ##
   ## **Indentation:**
   ## The next line will be auto-indented when the current ends with one of:
-  ## `,`, `=`, `:`, `var`, `let`, `const`, `type`, `import`, `object`, `RootObj`, `enum`
+  ## `,`, `=`, `:`, `var`, `let`, `const`, `type`, `import`, `object`, `RootObj`, `enum` and `object of X`
   ## The next line will be un-indented when a line is left empty.
-  ## The user's input is considered complete when a non-indented line is finished without triggering an auto-indent.
+  ## If the user manually indents or un-indents, the indentation will be adjusted accordingly.
+  ## 
+  ## **Branching:**
+  ## Branching is opened when a non-indented line starts with one of the branching triggers: `if`, `when`, `elif`, `try` and `except`.
+  ## When a non-indented line does not start with a branching trigger, branching is closed.
+  ## This behavior gives space to introduce non-indented `elif`, `else`, `except` and `finally` branches.
+  ## 
+  ## **Completion:**
+  ## The user's input is considered complete when either:
+  ##   - branching is closed and a non-indented line is finished without triggering an auto-indent.
+  ##   - branching is opened and an empty non-indented line is introduced.
   ##
   ## **EOF and Signals:**
   ## - `Ctrl+D` is captured and returned as a `Quit` input.
