@@ -5,6 +5,7 @@ import noise
 import strutils
 import input
 import styledoutput
+import sequtils
 
 
 type Reader* = object
@@ -15,13 +16,19 @@ type Reader* = object
   indentation: string
   historyFile: string
 
+const MatchAnyIndentTriggers = [
+  "object of "
+]
 
-const IndentTriggers = [
+const MatchLineEndIndentTriggers = [
   ",", "=", ":",
   "var", "let", "const", "type", "import",
   "object", "RootObj", "enum"
 ]
 
+const BranchingTriggers = [
+  "if ", "elif ", "try ", "try:", "except ", "except:"
+]
 
 proc setMainPrompt(self: var Reader) =
   let prompt = self.output.styledPrompt(self.promptMessage, self.promptSymbol & " ")
@@ -35,21 +42,35 @@ proc setMultilinePrompt(self: var Reader) =
 
 
 proc setIndentation(self: var Reader, indentationLevels: int) =
-  let indentation = self.indentation.repeat(indentationLevels)
+  let indentation = self.indentation.repeat(max(indentationLevels, 0))
   self.noise.preloadBuffer(indentation, collapseWhitespaces = false)
+
+
+proc handleBranching(branched: bool, indentation: int, line: string): bool =
+  return if indentation == 0:
+    BranchingTriggers.anyIt(line.startsWith(it))
+  else:
+    branched
 
 
 proc indent(line: string): bool =
   if line.len == 0:
     return
 
-  for trigger in IndentTriggers:
+  for trigger in MatchAnyIndentTriggers:
+    if trigger in line:
+      return true
+
+  for trigger in MatchLineEndIndentTriggers:
     if line.strip().endsWith(trigger):
-      result = true
+      return true
 
 
-proc unindent(indentation: int, line: string): bool =
-  indentation > 0 and line.strip.len == 0
+proc unindent(indentation: int, line: string, branched: bool): bool =
+  let lineIsEmpty = line.strip.len == 0
+  let unindentNonBranched = (not branched) and indentation > 0
+  let unindentBranched = branched and indentation >= 0
+  return lineIsEmpty and (unindentNonBranched or unindentBranched)
 
 
 proc loadHistory(self: var Reader) =
@@ -82,6 +103,17 @@ proc readSingleLine(self: var Reader): Input =
 
   self.addHistory(line)
   return Input(kind: Lines, lines: line)
+
+
+proc getIndentation(indentation: string, line: string): int =
+  var line = line
+
+  if indentation.len == 0:
+    return 0
+
+  while line.startsWith(indentation):
+    inc result
+    line = line[indentation.len..^1]
 
 
 proc newReader*(
@@ -124,13 +156,14 @@ proc read*(self: var Reader): Input =
   ##
   ## **History:**
   ## Each line is added to the history file.
-  var complete = false
+  var completed = false
+  var branched = false
   var indentation = 0
   var lines: seq[string] = @[]
 
   self.setMainPrompt()
 
-  while not complete:
+  while not completed:
     var singleLineResult = readSingleLine(self)
 
     if singleLineResult.kind != Lines:
@@ -138,10 +171,13 @@ proc read*(self: var Reader): Input =
 
     let line = singleLineResult.lines
 
+    indentation = getIndentation(self.indentation, line)
+    branched = handleBranching(branched, indentation, line)
+
     if indent(line):
       indentation += 1
 
-    if unindent(indentation, line):
+    if unindent(indentation, line, branched):
       indentation -= 1
 
     if line.strip.len > 0:
@@ -149,7 +185,10 @@ proc read*(self: var Reader): Input =
 
     self.setMultilinePrompt()
     self.setIndentation(indentation)
-    complete = indentation == 0
+
+    let branchCompleted = branched and indentation == -1
+    let regularCompleted = not branched and indentation == 0
+    completed = branchCompleted or regularCompleted
 
   result = Input(kind: Lines, lines: lines.join("\n"))
 
