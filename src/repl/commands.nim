@@ -1,13 +1,9 @@
 # ISC License
 # Copyright (c) 2025 RowDaBoat
 
-import tables
-import sequtils
-import strutils
-import ../repl/evaluation
-import ../vm/compiler
-import ../vm/vm
-import ../repl/styledoutput
+import tables, sequtils, strutils
+import evaluation, styledoutput
+import ../vm/[compiler, vm]
 
 
 type CommandsApi* = object
@@ -50,10 +46,12 @@ proc buildHelpCommand(commands: seq[Command]): Command =
 
 
 proc command*(name: string, help: string, run: CommandProc): Command =
+  ## Creates a new command with a help and run proc.
   Command(name: name, help: help, run: run)
 
 
 proc commands*(commands: varargs[Command]): Table[string, Command] = 
+  ## Creates a commands table.
   result = commands
     .mapIt((it.name, it))
     .toTable()
@@ -63,6 +61,11 @@ proc commands*(commands: varargs[Command]): Table[string, Command] =
 
 
 proc sourceCmd*(commandsApi: var CommandsApi, args: seq[string]): Evaluation =
+  ## Shows the generated source code for each component of Reploid's vm.
+  ## - **imports**: the declared imports.
+  ## - **declarations**: type, proc, template, macro, func, method, iterator, and converter declarations.
+  ## - **state**: variable declarations that hold the state of the vm, including internal getters and setters.
+  ## - **command**: the last command that was run.
   if args.len == 0:
     return Evaluation(kind: Success, result: "Usage: source <imports|declarations|state|command>")
 

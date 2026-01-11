@@ -1,5 +1,5 @@
 nimTitle	reploid	reploid.html	module src/reploid		0
-nim	Configuration	reploid.html#Configuration	object Configuration		27
-nim	defaultConfig	reploid.html#defaultConfig	proc defaultConfig(): Configuration		47
-nim	defaultCommands	reploid.html#defaultCommands	proc defaultCommands(): Table[string, Command]		61
-nim	reploid	reploid.html#reploid,Configuration,Table[string,Command]	proc reploid(configuration: Configuration = defaultConfig();\n        commands: Table[string, Command] = defaultCommands())		69
+nim	Configuration	reploid.html#Configuration	object Configuration		14
+nim	defaultConfig	reploid.html#defaultConfig	proc defaultConfig(): Configuration		34
+nim	defaultCommands	reploid.html#defaultCommands	proc defaultCommands(): Table[string, Command]		48
+nim	reploid	reploid.html#reploid,Configuration,Table[string,Command]	proc reploid(configuration: Configuration = defaultConfig();\n        commands: Table[string, Command] = defaultCommands())		56

@@ -1,10 +1,7 @@
 # ISC License
 # Copyright (c) 2025 RowDaBoat
 
-import sequtils
-import strutils
-import strformat
-import osproc
+import sequtils, strutils, strformat, osproc
 
 
 type Compiler* = object

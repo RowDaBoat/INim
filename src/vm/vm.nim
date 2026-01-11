@@ -1,14 +1,8 @@
 # ISC License
 # Copyright (c) 2025 RowDaBoat
 
-import os
-import dynlib
-import sequtils
-import strutils
-import compiler
-import temple
-import strformat
-import tables
+import sequtils, strutils, strformat, tables, os, dynlib
+import compiler, temple
 
 
 const nimExt* = ".nim"

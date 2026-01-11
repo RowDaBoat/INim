@@ -1,27 +1,14 @@
 # ISC License
 # Copyright (c) 2025 RowDaBoat
 
-import strformat
-import os
-import tables
+import sequtils, strformat, os, tables
 import cliquet
-import sequtils
 
-import repl/welcome
-import repl/styledoutput
-import vm/compiler
-import vm/vm
-export welcome, styledoutput, compiler, vm
+import repl/[welcome, styledoutput, reader, input, evaluator, evaluation, printer, commands]
+export welcome, styledoutput, reader, input, evaluator, evaluation, printer, commands
 
-import repl/reader
-import repl/input
-import repl/evaluator
-import repl/evaluation
-import repl/printer
-export reader, input, evaluator, evaluation, printer
-
-import repl/commands
-export commands
+import vm/[compiler, vm]
+export compiler, vm
 
 
 type Configuration* = object

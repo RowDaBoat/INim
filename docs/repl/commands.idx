@@ -1,8 +1,8 @@
 nimTitle	commands	repl/commands.html	module src/repl/commands		0
-nim	CommandsApi	repl/commands.html#CommandsApi	object CommandsApi		13
-nim	CommandProc	repl/commands.html#CommandProc	type CommandProc		19
-nim	Command	repl/commands.html#Command	object Command		22
-nim	command	repl/commands.html#command,string,string,CommandProc	proc command(name: string; help: string; run: CommandProc): Command		52
-nim	commands	repl/commands.html#commands,varargs[Command]	proc commands(commands: varargs[Command]): Table[string, Command]		56
-nim	sourceCmd	repl/commands.html#sourceCmd,CommandsApi,seq[string]	proc sourceCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation		65
-nim	quitCmd	repl/commands.html#quitCmd,CommandsApi,seq[string]	proc quitCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation		82
+nim	CommandsApi	repl/commands.html#CommandsApi	object CommandsApi		9
+nim	CommandProc	repl/commands.html#CommandProc	type CommandProc		15
+nim	Command	repl/commands.html#Command	object Command		18
+nim	command	repl/commands.html#command,string,string,CommandProc	proc command(name: string; help: string; run: CommandProc): Command		48
+nim	commands	repl/commands.html#commands,varargs[Command]	proc commands(commands: varargs[Command]): Table[string, Command]		53
+nim	sourceCmd	repl/commands.html#sourceCmd,CommandsApi,seq[string]	proc sourceCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation		63
+nim	quitCmd	repl/commands.html#quitCmd,CommandsApi,seq[string]	proc quitCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation		80

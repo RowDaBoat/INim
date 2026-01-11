@@ -1,12 +1,8 @@
 # ISC License
 # Copyright (c) 2025 RowDaBoat
 
-import strutils
-import tables
-import input
-import evaluation
-import parser
-import commands
+import strutils, tables
+import input, evaluation, parser, commands
 import ../vm/vm
 
 

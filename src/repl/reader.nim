@@ -1,11 +1,9 @@
 # ISC License
 # Copyright (c) 2025 RowDaBoat
 
+import strutils, sequtils
 import noise
-import strutils
-import input
-import styledoutput
-import sequtils
+import input, styledoutput
 
 
 type Reader* = object

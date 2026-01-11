@@ -1,8 +1,7 @@
 # ISC License
 # Copyright (c) 2025 RowDaBoat
 
-import strutils
-import sequtils
+import strutils, sequtils
 
 proc extractIndentation(text: string, position: int): string =
   var lineStart = position

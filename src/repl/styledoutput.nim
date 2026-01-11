@@ -1,8 +1,7 @@
 # ISC License
 # Copyright (c) 2025 RowDaBoat
 
-import terminal
-import options
+import terminal, options
 import noise/styler
 
 
