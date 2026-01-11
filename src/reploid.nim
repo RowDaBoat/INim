@@ -20,10 +20,8 @@ import repl/evaluation
 import repl/printer
 export reader, input, evaluator, evaluation, printer
 
-import commands/commands
-import commands/source
-import commands/quit
-export commands, source, quit
+import repl/commands
+export commands
 
 
 type Configuration* = object

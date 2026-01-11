@@ -61,7 +61,7 @@
       <li><a class="reference" href="#DeclarerKind" title="DeclarerKind = enum
   Const, Let, Var">DeclarerKind</a></li>
 <li><a class="reference" href="#Initialize" title="Initialize = proc (oldStateLib: pointer) {.stdcall.}">Initialize</a></li>
-<li><a class="reference" href="#Run" title="Run = proc (state: pointer): string {.stdcall.}">Run</a></li>
+<li><a class="reference" href="#Run" title="Run = proc (state: pointer): (string, string) {.stdcall.}">Run</a></li>
 <li><a class="reference" href="#VariableDeclaration" title="VariableDeclaration = object
   declarer*: DeclarerKind
   name*: string
@@ -198,7 +198,7 @@
   </dd>
 </div>
 <div id="Run">
-  <dt><pre><a href="vm.html#Run"><span class="Identifier">Run</span></a> <span class="Other">=</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">state</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> {.<span class="Identifier">stdcall</span>.}</pre></dt>
+  <dt><pre><a href="vm.html#Run"><span class="Identifier">Run</span></a> <span class="Other">=</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">state</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span><span class="Other">:</span> <span class="Other">(</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">string</span><span class="Other">)</span> {.<span class="Identifier">stdcall</span>.}</pre></dt>
   <dd>
     
     
@@ -269,8 +269,8 @@
   <dd>
     
     Cleans up the vm, unloading all state libraries.
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L441" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L441" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L446" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L446" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -282,8 +282,8 @@
   <dd>
     
     Temporary path where the vm stored the last command.
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L431" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L431" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L436" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L436" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -295,8 +295,8 @@
   <dd>
     
     Temporary path where the vm writes the last declarations that were validated.
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L426" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L426" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L431" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L431" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -308,8 +308,8 @@
   <dd>
     
     Temporary path where the vm stores its declarations.
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L421" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L421" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L426" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L426" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -364,8 +364,8 @@
   <dd>
     
     Temporary path where the vm writes the last imports that were validated.
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L416" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L416" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L421" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L421" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -377,8 +377,8 @@
   <dd>
     
     Temporary path where the vm stores its imports.
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L411" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L411" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L416" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L416" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -432,8 +432,8 @@
   <dd>
     
     Temporary path where the vm stored the last state.
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L436" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L436" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/vm/vm.nim#L441" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/vm/vm.nim#L441" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -493,7 +493,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-01 18:26:58 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-11 10:56:42 UTC</small>
       </div>
     </div>
   </div>

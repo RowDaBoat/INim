@@ -25,8 +25,9 @@ type Command* = object
   run*: CommandProc
 
 
-proc command*(name: string, help: string, run: CommandProc): Command =
-  Command(name: name, help: help, run: run)
+proc toSource(path: string): string =
+  path & ":\n" &
+  readFile(path)
 
 
 proc buildHelpLine(name: string, help: string, maxWidth: int): string =
@@ -48,6 +49,10 @@ proc buildHelpCommand(commands: seq[Command]): Command =
     Evaluation(kind: Success, result: helpText)
 
 
+proc command*(name: string, help: string, run: CommandProc): Command =
+  Command(name: name, help: help, run: run)
+
+
 proc commands*(commands: varargs[Command]): Table[string, Command] = 
   result = commands
     .mapIt((it.name, it))
@@ -55,3 +60,24 @@ proc commands*(commands: varargs[Command]): Table[string, Command] =
 
   let helpCommand = buildHelpCommand(commands.toSeq)
   result[helpCommand.name] = helpCommand
+
+
+proc sourceCmd*(commandsApi: var CommandsApi, args: seq[string]): Evaluation =
+  if args.len == 0:
+    return Evaluation(kind: Success, result: "Usage: source <imports|declarations|state|command>")
+
+  case args[0]:
+  of "imports":
+    return Evaluation(kind: Success, result: commandsApi.vm.importsPath.toSource)
+  of "declarations":
+    return Evaluation(kind: Success, result: commandsApi.vm.declarationsPath.toSource)
+  of "command":
+    return Evaluation(kind: Success, result: commandsApi.vm.commandPath.toSource)
+  of "state":
+    return Evaluation(kind: Success, result: commandsApi.vm.statePath.toSource)
+  else:
+    return Evaluation(kind: Error, result: "Invalid source: " & args[0])
+
+
+proc quitCmd*(commandsApi: var CommandsApi, args: seq[string]): Evaluation =
+  Evaluation(kind: Quit)

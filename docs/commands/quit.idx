@@ -1,2 +1,0 @@
-nimTitle	quit	commands/quit.html	module src/commands/quit		0
-nim	quitCmd	commands/quit.html#quitCmd,CommandsApi,seq[string]	proc quitCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation		8

@@ -6,8 +6,8 @@ import tables
 import input
 import evaluation
 import parser
+import commands
 import ../vm/vm
-import ../commands/commands
 
 
 type Evaluator* = object

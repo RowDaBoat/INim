@@ -18,10 +18,10 @@ nim	updateImports	vm/vm.html#updateImports,Vm	proc updateImports(self: var Vm): 
 nim	updateDeclarations	vm/vm.html#updateDeclarations,Vm	proc updateDeclarations(self: var Vm): (string, int)		315
 nim	updateState	vm/vm.html#updateState,Vm	proc updateState(self: var Vm): (string, int)		338
 nim	runCommand	vm/vm.html#runCommand,Vm,string	proc runCommand(self: var Vm; command: string): (string, int)		379
-nim	importsPath	vm/vm.html#importsPath,Vm	proc importsPath(self: Vm): string		411
-nim	importsCheckPath	vm/vm.html#importsCheckPath,Vm	proc importsCheckPath(self: Vm): string		416
-nim	declarationsPath	vm/vm.html#declarationsPath,Vm	proc declarationsPath(self: Vm): string		421
-nim	declarationsCheckPath	vm/vm.html#declarationsCheckPath,Vm	proc declarationsCheckPath(self: Vm): string		426
-nim	commandPath	vm/vm.html#commandPath,Vm	proc commandPath(self: Vm): string		431
-nim	statePath	vm/vm.html#statePath,Vm	proc statePath(self: Vm): string		436
-nim	clean	vm/vm.html#clean,Vm	proc clean(self: var Vm)		441
+nim	importsPath	vm/vm.html#importsPath,Vm	proc importsPath(self: Vm): string		416
+nim	importsCheckPath	vm/vm.html#importsCheckPath,Vm	proc importsCheckPath(self: Vm): string		421
+nim	declarationsPath	vm/vm.html#declarationsPath,Vm	proc declarationsPath(self: Vm): string		426
+nim	declarationsCheckPath	vm/vm.html#declarationsCheckPath,Vm	proc declarationsCheckPath(self: Vm): string		431
+nim	commandPath	vm/vm.html#commandPath,Vm	proc commandPath(self: Vm): string		436
+nim	statePath	vm/vm.html#statePath,Vm	proc statePath(self: Vm): string		441
+nim	clean	vm/vm.html#clean,Vm	proc clean(self: var Vm)		446

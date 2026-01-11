@@ -25,7 +25,7 @@
   <div class="document" id="documentId">
     <div class="container">
       <h1 class="title">Index</h1>
-      Modules: <a href="commands/commands.html">commands/commands</a>, <a href="commands/quit.html">commands/quit</a>, <a href="commands/source.html">commands/source</a>, <a href="repl/evaluation.html">repl/evaluation</a>, <a href="repl/evaluator.html">repl/evaluator</a>, <a href="repl/input.html">repl/input</a>, <a href="repl/parser.html">repl/parser</a>, <a href="repl/printer.html">repl/printer</a>, <a href="repl/reader.html">repl/reader</a>, <a href="repl/styledoutput.html">repl/styledoutput</a>, <a href="repl/welcome.html">repl/welcome</a>, <a href="reploid.html">reploid</a>, <a href="vm/compiler.html">vm/compiler</a>, <a href="vm/temple.html">vm/temple</a>, <a href="vm/vm.html">vm/vm</a>.<br/><p /><h2>API symbols</h2>
+      Modules: <a href="repl/commands.html">repl/commands</a>, <a href="repl/evaluation.html">repl/evaluation</a>, <a href="repl/evaluator.html">repl/evaluator</a>, <a href="repl/input.html">repl/input</a>, <a href="repl/parser.html">repl/parser</a>, <a href="repl/printer.html">repl/printer</a>, <a href="repl/reader.html">repl/reader</a>, <a href="repl/styledoutput.html">repl/styledoutput</a>, <a href="repl/welcome.html">repl/welcome</a>, <a href="reploid.html">reploid</a>, <a href="vm/compiler.html">vm/compiler</a>, <a href="vm/temple.html">vm/temple</a>, <a href="vm/vm.html">vm/vm</a>.<br/><p /><h2>API symbols</h2>
 <dl><dt><a name="clean" href="#clean"><span>clean:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="vm: proc clean(self: var Vm)" href="vm/vm.html#clean%2CVm">vm: proc clean(self: var Vm)</a></li>
@@ -46,11 +46,11 @@
           </ul></dd>
 <dt><a name="Command" href="#Command"><span>Command:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="commands: object Command" href="commands/commands.html#Command">commands: object Command</a></li>
+          data-doc-search-tag="commands: object Command" href="repl/commands.html#Command">commands: object Command</a></li>
           </ul></dd>
 <dt><a name="command" href="#command"><span>command:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="commands: proc command(name: string; help: string; run: CommandProc): Command" href="commands/commands.html#command%2Cstring%2Cstring%2CCommandProc">commands: proc command(name: string; help: string; run: CommandProc): Command</a></li>
+          data-doc-search-tag="commands: proc command(name: string; help: string; run: CommandProc): Command" href="repl/commands.html#command%2Cstring%2Cstring%2CCommandProc">commands: proc command(name: string; help: string; run: CommandProc): Command</a></li>
           </ul></dd>
 <dt><a name="commandPath" href="#commandPath"><span>commandPath:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -58,15 +58,15 @@
           </ul></dd>
 <dt><a name="CommandProc" href="#CommandProc"><span>CommandProc:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="commands: type CommandProc" href="commands/commands.html#CommandProc">commands: type CommandProc</a></li>
+          data-doc-search-tag="commands: type CommandProc" href="repl/commands.html#CommandProc">commands: type CommandProc</a></li>
           </ul></dd>
 <dt><a name="commands" href="#commands"><span>commands:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="commands: proc commands(commands: varargs[Command]): Table[string, Command]" href="commands/commands.html#commands%2Cvarargs%5BCommand%5D">commands: proc commands(commands: varargs[Command]): Table[string, Command]</a></li>
+          data-doc-search-tag="commands: proc commands(commands: varargs[Command]): Table[string, Command]" href="repl/commands.html#commands%2Cvarargs%5BCommand%5D">commands: proc commands(commands: varargs[Command]): Table[string, Command]</a></li>
           </ul></dd>
 <dt><a name="CommandsApi" href="#CommandsApi"><span>CommandsApi:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="commands: object CommandsApi" href="commands/commands.html#CommandsApi">commands: object CommandsApi</a></li>
+          data-doc-search-tag="commands: object CommandsApi" href="repl/commands.html#CommandsApi">commands: object CommandsApi</a></li>
           </ul></dd>
 <dt><a name="compileLibrary" href="#compileLibrary"><span>compileLibrary:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -310,7 +310,7 @@
           </ul></dd>
 <dt><a name="quitCmd" href="#quitCmd"><span>quitCmd:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="quit: proc quitCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation" href="commands/quit.html#quitCmd%2CCommandsApi%2Cseq%5Bstring%5D">quit: proc quitCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation</a></li>
+          data-doc-search-tag="commands: proc quitCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation" href="repl/commands.html#quitCmd%2CCommandsApi%2Cseq%5Bstring%5D">commands: proc quitCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation</a></li>
           </ul></dd>
 <dt><a name="read" href="#read"><span>read:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -344,7 +344,7 @@
           </ul></dd>
 <dt><a name="sourceCmd" href="#sourceCmd"><span>sourceCmd:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="source: proc sourceCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation" href="commands/source.html#sourceCmd%2CCommandsApi%2Cseq%5Bstring%5D">source: proc sourceCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation</a></li>
+          data-doc-search-tag="commands: proc sourceCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation" href="repl/commands.html#sourceCmd%2CCommandsApi%2Cseq%5Bstring%5D">commands: proc sourceCmd(commandsApi: var CommandsApi; args: seq[string]): Evaluation</a></li>
           </ul></dd>
 <dt><a name="statePath" href="#statePath"><span>statePath:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -410,7 +410,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-01 18:26:58 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-11 10:56:42 UTC</small>
       </div>
     </div>
   </div>
