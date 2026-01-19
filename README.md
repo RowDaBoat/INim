@@ -23,6 +23,9 @@ INim simulated the REPL behavior by re-running all the previous commands each ti
 - Runs in the current directory, `import` global modules, or modules relative to the current directory.
 - Colorized output
 - Nim compiler options can be specified with the `--flags` option (ie: `reploid --flags=DEBUG,ssl`)
+- Commands are run on one of two virtual machines:
+  - `nimc`: Uses compiles commands with `nim c`, it is slower to compile but faster to run, and compatible with native code. This is the default.
+  - `nims`: Uses `nim script` to run commands faster, at the cost of compatibility and the limitations of `nim script`.
 
 
 ## Documentation
@@ -66,7 +69,6 @@ The full API reference is available [here](https://rowdaboat.github.io/reploid/r
 
 
 ## Roadmap
-- Faster but less compatible VM using `nimscripter`
+- Shell commands
 - save/load program commands
 - save/load state commands
-- Shell commands

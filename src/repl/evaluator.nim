@@ -81,17 +81,19 @@ proc processImport(self: var Evaluator, lines: string, evaluation: var Evaluatio
 
 
 proc getType(parser: var Parser): string =
-  let typeParser = parser
+  var typeParser = parser
     .consumeSpaces()
     .matchSymbols(":")
-    .consumeSpaces()
-    .matchLabel()
+    .matchUpTo("=")
 
-  if typeParser.ok:
-    parser = typeParser
-    return parser.tokens[^1]
+  parser = typeParser
 
-  return ""
+  if not parser.ok:
+    result = parser.text.strip()
+    parser.ok = result.len > 0
+    return result
+  
+  return parser.tokens[^1].strip()
 
 
 proc getInitializer(parser: var Parser): string =

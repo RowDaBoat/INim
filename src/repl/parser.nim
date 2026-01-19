@@ -24,10 +24,14 @@ proc startsAsLabelOrNumber(text: string): bool =
 
 
 proc startsAsSymbol(text: string): bool =
-  let notAlphaNumeric = not text[0].isAlphaNumeric
-  let notUnderscore = text[0] != '_'
-  let notWhitespace = not text[0].isSpaceAscii
-  text.len > 0 and notAlphaNumeric and notUnderscore and notWhitespace
+  if text.len == 0:
+    return false
+
+  let start = text[0]
+  let notAlphaNumeric = not start.isAlphaNumeric
+  let notUnderscore = start != '_'
+  let notWhitespace = not start.isSpaceAscii and start != '\n'
+  notAlphaNumeric and notUnderscore and notWhitespace
 
 
 proc parse*(text: string): Parser =
@@ -128,6 +132,46 @@ proc matchLabel*(self: Parser): Parser =
     result.expected = "expected: a label, got '" & self.text & "'"
   else:
     result.tokens.add(token)
+
+
+proc matchType*(self: Parser): Parser =
+  if not self.ok:
+    return self
+
+  result = self
+  var token = ""
+
+  # First, match the base type name (label)
+  while result.text.len > 0 and result.text.startsAsLabelOrNumber:
+    token &= result.text[0]
+    result.text = result.text[1..^1]
+
+  if token.len == 0:
+    result.ok = false
+    result.expected = "expected: a type, got '" & self.text & "'"
+    return
+
+  # Check for generic parameters
+  if result.text.len > 0 and result.text[0] == '[':
+    var bracketDepth = 0
+    while result.text.len > 0:
+      let c = result.text[0]
+      token &= c
+      result.text = result.text[1..^1]
+
+      if c == '[':
+        bracketDepth += 1
+      elif c == ']':
+        bracketDepth -= 1
+        if bracketDepth == 0:
+          break
+
+    if bracketDepth != 0:
+      result.ok = false
+      result.expected = "expected: matching ']', got '" & self.text & "'"
+      return
+
+  result.tokens.add(token)
 
 
 proc matchUpTo*(self: Parser, texts: varargs[string]): Parser =
