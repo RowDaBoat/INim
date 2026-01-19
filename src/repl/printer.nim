@@ -56,7 +56,6 @@ proc styleIfCompilerOutput(self: Printer, line: string, path: string): (string, 
   let matchCompilerOut = matchCompilerOutput(post, self.sourceFileNames)
 
   if not matchCompilerOut.ok:
-    echo "matchCompilerOut: ", matchCompilerOut.expected
     return (line, None)
 
   var replacement = self.sourceFileReplacements[matchCompilerOut.tokens[1]]

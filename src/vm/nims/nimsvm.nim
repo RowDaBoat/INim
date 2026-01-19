@@ -65,8 +65,10 @@ proc errorHook(config: ConfigRef; info: TLineInfo; msg: string; severity: Severi
 proc exec(intr: Interpreter, file: string): (string, int) =
   try:
     intr.evalscript(llStreamOpen(readFile(file)))
-  except VMErrorMsg as e:
-    return (e.msg, 1)
+  except:
+    let error = getCurrentException()
+    let msg = if error.isNil: "Unknown error" else: error.msg
+    return (msg, 1)
 
   return ("", 0)
 
@@ -228,7 +230,14 @@ method runCommand*(self: NimSVm, command: string): (string, int) =
   self.loadState(state)
 
   let run = self.runIntr.selectRoutine("run")
-  let resultNode = self.runIntr.callRoutine(run, [])
+  var resultNode : PNode
+
+  try:
+    resultNode = self.runIntr.callRoutine(run, [])
+  except:
+    let error = getCurrentException()
+    let msg = if error.isNil: "Unknown error" else: error.msg
+    return (msg, 1)
 
   let output = resultNode[0].strVal
   let error = resultNode[1].strVal

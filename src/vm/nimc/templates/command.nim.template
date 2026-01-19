@@ -30,8 +30,8 @@ proc run*(stateLib: LibHandle): (string, string) {.exportc, dynlib, stdcall.} =
   try:
     result[0] = showIfTyped:
       {command}
-  except Exception as error:
-    result[1] = error.msg
+  except:
+    result[1] = getCurrentException().msg
 
   # Save State
   {saveState}

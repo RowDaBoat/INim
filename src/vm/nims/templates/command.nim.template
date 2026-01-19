@@ -19,8 +19,5 @@ template showIfTyped(body: untyped): string =
 
 
 proc run*(): (string, string) =
-  try:
-    result[0] = showIfTyped:
-      {command}
-  except Exception as error:
-    result[1] = error.msg
+  result[0] = showIfTyped:
+    {command}
