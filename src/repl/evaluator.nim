@@ -3,7 +3,7 @@
 
 import strutils, tables
 import input, evaluation, parser, commands
-import ../vm/vm
+import ../vms/vm
 
 
 type Evaluator* = object

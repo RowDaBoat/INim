@@ -7,9 +7,9 @@ import cliquet
 import repl/[welcome, styledoutput, reader, input, evaluator, evaluation, printer, commands]
 export welcome, styledoutput, reader, input, evaluator, evaluation, printer, commands
 
-import vm/vm
-import vm/nimc/[compiler, nimcvm]
-import vm/nims/nimsvm
+import vms/vm
+import vms/nimc/[compiler, nimcvm]
+import vms/nims/nimsvm
 export compiler, vm, nimcvm, nimsvm
 
 type VmImplementation* = enum nimc, nims

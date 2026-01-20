@@ -85,7 +85,7 @@ proc newNimSVm*(tmpPath: string = getTempDir()): NimSVm =
   ## Creates a new Virtual Machine that uses nim script to run commands.
   ## **Strengths**: maximizes speed.
   ## **Weaknesses**: it does not allow integration with native code.
-  let stdPaths = getStdPaths()
+  let stdPaths = getStdPaths() & "."
   let commandBasePath = tmpPath / "command"
 
   var runIntr = createInterpreter(commandBasePath & nimExt, stdPaths)

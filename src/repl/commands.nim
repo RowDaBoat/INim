@@ -3,7 +3,7 @@
 
 import std/paths, tables, sequtils, strutils
 import evaluation, styledoutput
-import ../vm/vm
+import ../vms/vm
 
 
 type CommandsApi* = object

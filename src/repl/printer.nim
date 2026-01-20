@@ -3,7 +3,7 @@
 
 import std/[paths, strutils, sequtils, tables]
 import styledoutput, evaluation, parser
-import ../vm/vm
+import ../vms/vm
 
 
 type OutputDisplay* = enum clean, full

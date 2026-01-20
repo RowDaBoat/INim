@@ -16,8 +16,7 @@ requires "https://github.com/jangko/nim-noise.git#master"
 requires "https://github.com/beef331/nimscripter.git#master"
 
 task test, "Run the test suite":
-  exec "nim r test/nimcvm.nim"
-  exec "nim r test/nimsvm.nim"
+  exec "nim r test/vm.nim"
 
 task docs, "Generate documentation":
   when defined(windows):
