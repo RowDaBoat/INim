@@ -88,6 +88,14 @@
   <li><a class="reference" href="#matchSymbols%2CParser%2Cvarargs%5Bstring%5D" title="matchSymbols(self: Parser; texts: varargs[string]): Parser">matchSymbols(self: Parser; texts: varargs[string]): Parser</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">matchText
+  <li><a class="reference" href="#matchText%2CParser%2Cvarargs%5Bstring%5D" title="matchText(self: Parser; texts: varargs[string]): Parser">matchText(self: Parser; texts: varargs[string]): Parser</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">matchType
+  <li><a class="reference" href="#matchType%2CParser" title="matchType(self: Parser): Parser">matchType(self: Parser): Parser</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">matchUpTo
   <li><a class="reference" href="#matchUpTo%2CParser%2Cvarargs%5Bstring%5D" title="matchUpTo(self: Parser; texts: varargs[string]): Parser">matchUpTo(self: Parser; texts: varargs[string]): Parser</a></li>
 
@@ -140,8 +148,8 @@
   <dd>
     
     
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L91" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L91" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L114" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L114" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -153,8 +161,8 @@
   <dd>
     
     
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L73" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L73" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L95" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L95" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -167,8 +175,8 @@
   <dd>
     
     
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L37" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L37" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L59" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L59" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -180,8 +188,8 @@
   <dd>
     
     
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L96" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L96" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L119" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L119" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -194,8 +202,35 @@
   <dd>
     
     
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L55" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L55" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L77" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L77" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="matchText-procs-all">
+  <div id="matchText,Parser,varargs[string]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#matchText%2CParser%2Cvarargs%5Bstring%5D"><span class="Identifier">matchText</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="parser.html#Parser"><span class="Identifier">Parser</span></a><span class="Other">;</span> <span class="Identifier">texts</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="parser.html#Parser"><span class="Identifier">Parser</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L41" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L41" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="matchType-procs-all">
+  <div id="matchType,Parser">
+  <dt><pre><span class="Keyword">proc</span> <a href="#matchType%2CParser"><span class="Identifier">matchType</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="parser.html#Parser"><span class="Identifier">Parser</span></a><span class="Other">)</span><span class="Other">:</span> <a href="parser.html#Parser"><span class="Identifier">Parser</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L137" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L137" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -208,8 +243,8 @@
   <dd>
     
     
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L114" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L114" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L177" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L177" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -221,8 +256,8 @@
   <dd>
     
     
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L33" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L33" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/parser.nim#L37" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/parser.nim#L37" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -238,7 +273,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-11 11:07:55 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-20 15:21:45 UTC</small>
       </div>
     </div>
   </div>

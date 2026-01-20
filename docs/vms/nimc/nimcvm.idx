@@ -1,0 +1,11 @@
+nimTitle	nimcvm	vms/nimc/nimcvm.html	module src/vms/nimc/nimcvm		0
+nim	libExt	vms/nimc/nimcvm.html#libExt	const libExt		8
+nim	Initialize	vms/nimc/nimcvm.html#Initialize	type Initialize		29
+nim	Run	vms/nimc/nimcvm.html#Run	type Run		30
+nim	NimCVm	vms/nimc/nimcvm.html#NimCVm	type NimCVm		33
+nim	newNimCVm	vms/nimc/nimcvm.html#newNimCVm,Compiler,string	proc newNimCVm(compiler: Compiler; tmpPath: string = getTempDir()): NimCVm		198
+nim	updateImports	vms/nimc/nimcvm.html#updateImports.e,NimCVm	method updateImports(self: NimCVm): (string, int)		227
+nim	updateDeclarations	vms/nimc/nimcvm.html#updateDeclarations.e,NimCVm	method updateDeclarations(self: NimCVm): (string, int)		248
+nim	updateState	vms/nimc/nimcvm.html#updateState.e,NimCVm	method updateState(self: NimCVm): (string, int)		270
+nim	runCommand	vms/nimc/nimcvm.html#runCommand.e,NimCVm,string	method runCommand(self: NimCVm; command: string): (string, int)		309
+nim	clean	vms/nimc/nimcvm.html#clean.e,NimCVm	method clean(self: NimCVm)		344

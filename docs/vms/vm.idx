@@ -1,0 +1,25 @@
+nimTitle	vm	vms/vm.html	module src/vms/vm		0
+nim	nimExt	vms/vm.html#nimExt	const nimExt		4
+nim	checkSuffix	vms/vm.html#checkSuffix	const checkSuffix		5
+nim	Const	vms/vm.html#Const	DeclarerKind.Const		8
+nim	Let	vms/vm.html#Let	DeclarerKind.Let		8
+nim	Var	vms/vm.html#Var	DeclarerKind.Var		8
+nim	DeclarerKind	vms/vm.html#DeclarerKind	enum DeclarerKind		8
+nim	VariableDeclaration	vms/vm.html#VariableDeclaration	object VariableDeclaration		11
+nim	Vm	vms/vm.html#Vm	type Vm		18
+nim	`$`	vms/vm.html#$,DeclarerKind	proc `$`(self: DeclarerKind): string		33
+nim	isSuccess	vms/vm.html#isSuccess	proc isSuccess(toCheck: (string, int)): bool		40
+nim	importsPath	vms/vm.html#importsPath,Vm	proc importsPath(self: Vm): Path		45
+nim	importsCheckPath	vms/vm.html#importsCheckPath,Vm	proc importsCheckPath(self: Vm): Path		50
+nim	declarationsPath	vms/vm.html#declarationsPath,Vm	proc declarationsPath(self: Vm): Path		55
+nim	declarationsCheckPath	vms/vm.html#declarationsCheckPath,Vm	proc declarationsCheckPath(self: Vm): Path		60
+nim	commandPath	vms/vm.html#commandPath,Vm	proc commandPath(self: Vm): Path		65
+nim	statePath	vms/vm.html#statePath,Vm	proc statePath(self: Vm): Path		70
+nim	declareImport	vms/vm.html#declareImport,Vm,string	proc declareImport(self: Vm; declaration: string)		75
+nim	declareVar	vms/vm.html#declareVar,Vm,DeclarerKind,string,string,string	proc declareVar(self: Vm; declarer: DeclarerKind; name: string; typ: string = "";\n           initializer: string = "")		81
+nim	declare	vms/vm.html#declare,Vm,string	proc declare(self: Vm; declaration: string)		97
+nim	updateImports	vms/vm.html#updateImports.e,Vm	method updateImports(self: Vm): (string, int)		103
+nim	updateState	vms/vm.html#updateState.e,Vm	method updateState(self: Vm): (string, int)		109
+nim	updateDeclarations	vms/vm.html#updateDeclarations.e,Vm	method updateDeclarations(self: Vm): (string, int)		115
+nim	runCommand	vms/vm.html#runCommand.e,Vm,string	method runCommand(self: Vm; command: string): (string, int)		120
+nim	clean	vms/vm.html#clean.e,Vm	method clean(self: Vm)		126

@@ -8,20 +8,17 @@ INim simulated the REPL behavior by re-running all the previous commands each ti
 ![Reploid Showcase](reploid.png)
 
 ## Features
-
-### Already implemented
 - Tested on Linux, MacOS, BSD and Windows
-- It is available to be used as a CLI tool or as a library to integrate into other applications.
-- Run it with a single call to `reploid()`, or build your own `REPL` using the nuts and bolts provided by the library.
+- Can be used as a CLI tool or as a library to integrate into other applications.
+- Prints out the value and type of expressions.
+- Can be configured through command line arguments or a configuration file.
+- Command history support
+- Colorized output
 - Automatic indentation (`if`, `for`, `proc`, `var`, ...)
 - Offers preloading imports through the command line or configuration file.
-- Command history support
-- Uses `nim` compiler in PATH, or a custom path. 
-- Can be configured through command line arguments or a configuration file.
-- Setup one or more pre-imported preludes.
-- Prints out value and type of expressions.
+- Run it with a single call to `reploid()`, or build your own `REPL` using the nuts and bolts provided by the library.
+- Uses the `nim` compiler in PATH, or a custom path. 
 - Runs in the current directory, `import` global modules, or modules relative to the current directory.
-- Colorized output
 - Nim compiler options can be specified with the `--flags` option (ie: `reploid --flags=DEBUG,ssl`)
 - Commands are run on one of two virtual machines:
   - `nimc`: Uses compiles commands with `nim c`, it is slower to compile but faster to run, and compatible with native code. This is the default.
@@ -37,13 +34,15 @@ INim simulated the REPL behavior by re-running all the previous commands each ti
 - **config**: configuration file to use, default is ~/.reploid/config
 - **history**: history file to use, default is ~/.reploid/history
 - **colors**: enabel/disable colors, enabled by default
+- **output**: display a clean or full output, default is clean
+- **vm**: virtual machine to use, can be `nimc` or `nims`, default is `nimc`
 - **help**: show the help message
 
 ### Built-in commands
- - **imports**: shows all imports
- - **declarations**: shows all type and proc declarations
- - **quit**: quits reploid
- - **help**: show this help message
+- **imports**: shows all imports
+- **declarations**: shows all type and proc declarations
+- **quit**: quits reploid
+- **help**: show this help message
 
 ### Quick start
 From the command line:
@@ -63,7 +62,7 @@ The full API reference is available [here](https://rowdaboat.github.io/reploid/r
 
 
 ## Limitations
-- **Compilation times**: since `reploid`'s vm uses the `nim` compiler to compile commands and declarations it takes some time to run each. This could be mitigated by a faster compiler like `tcc`, but `tcc` has not yet implemented inline assembly for the `arm64` architecture, which is needed to compile `nim` on `MacOS`. Once `tcc` implements this, it will be integrated into `reploid`.
+- **Compilation times**: since the `nimcvm` uses the `nim` compiler to compile commands and declarations it takes some time to run each. This could be mitigated by a faster compiler like `tcc`, but `tcc` has not yet implemented inline assembly for the `arm64` architecture, which is needed to compile `nim` on `MacOS`. Once `tcc` implements this, it will be integrated into `reploid`.
 
 - **Declared procs cannot access variable declarations**: due to how the vm lays out procs and variable declarations, they cannot be accessed from procs. This design decision was taken to avoid greater compilation times.
 

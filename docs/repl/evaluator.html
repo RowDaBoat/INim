@@ -93,7 +93,7 @@
     <div class="section" id="6">
   <h1><a class="toc-backref" href="#6">Imports</a></h1>
   <dl class="item">
-    <a class="reference external" href="input.html">input</a>, <a class="reference external" href="evaluation.html">evaluation</a>, <a class="reference external" href="parser.html">parser</a>, <a class="reference external" href="commands.html">commands</a>, <a class="reference external" href="../vm/vm.html">../vm/vm</a>
+    <a class="reference external" href="input.html">input</a>, <a class="reference external" href="evaluation.html">evaluation</a>, <a class="reference external" href="parser.html">parser</a>, <a class="reference external" href="commands.html">commands</a>, <a class="reference external" href="../vms/vm.html">../vms/vm</a>
   </dl>
 </div>
 <div class="section" id="7">
@@ -118,16 +118,15 @@
     <div id="eval-procs-all">
   <div id="eval,Evaluator,Input">
   <dt><pre><span class="Keyword">proc</span> <a href="#eval%2CEvaluator%2CInput"><span class="Identifier">eval</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="evaluator.html#Evaluator"><span class="Identifier">Evaluator</span></a><span class="Other">;</span> <span class="Identifier">input</span><span class="Other">:</span> <a href="input.html#Input"><span class="Identifier">Input</span></a><span class="Other">)</span><span class="Other">:</span> <a href="evaluation.html#Evaluation"><span class="Identifier">Evaluation</span></a> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">ExecIOEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     <p>Evaluates the given input, returning an Evaluation object.</p>
 <p><strong>`Lines`:</strong> If the input kind is <tt class="docutils literal"><span class="pre"><span class="Identifier">Lines</span></span></tt>, the lines are evaluated as declarations, nim code, or built-in commands from the commands table. Evaluating to what the declaration, nim code, or built-in command evaluate to.</p>
 <p><strong>`Reset`:</strong> a reset input will clear the current line and start a new one. It evaluates to an <tt class="docutils literal"><span class="pre"><span class="Identifier">Empty</span></span></tt> evaluation. <strong>`Quit` and `EOF`:</strong> both will be evaluated to a <tt class="docutils literal"><span class="pre"><span class="Identifier">Quit</span></span></tt> evaluation, exiting the REPL.</p>
 
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/evaluator.nim#L193" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/evaluator.nim#L193" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/evaluator.nim#L188" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/evaluator.nim#L188" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -136,15 +135,15 @@
 <div id="newEvaluator-procs-all">
   <div id="newEvaluator,CommandsApi,Table[string,Command],Vm">
   <dt><pre><span class="Keyword">proc</span> <a href="#newEvaluator%2CCommandsApi%2CTable%5Bstring%2CCommand%5D%2CVm"><span class="Identifier">newEvaluator</span></a><span class="Other">(</span><span class="Identifier">commandsApi</span><span class="Other">:</span> <a href="commands.html#CommandsApi"><span class="Identifier">CommandsApi</span></a><span class="Other">;</span> <span class="Identifier">commands</span><span class="Other">:</span> <span class="Identifier">Table</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <a href="commands.html#Command"><span class="Identifier">Command</span></a><span class="Other">]</span><span class="Other">;</span>
-                  <span class="Identifier">vm</span><span class="Other">:</span> <a href="../vm/vm.html#Vm"><span class="Identifier">Vm</span></a><span class="Other">)</span><span class="Other">:</span> <a href="evaluator.html#Evaluator"><span class="Identifier">Evaluator</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+                  <span class="Identifier">vm</span><span class="Other">:</span> <a href="../vms/vm.html#Vm"><span class="Identifier">Vm</span></a><span class="Other">)</span><span class="Other">:</span> <a href="evaluator.html#Evaluator"><span class="Identifier">Evaluator</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     <p>Creates a new Evaluator object with the given commands and VM.</p>
 <p><strong>Commands:</strong> <tt class="docutils literal"><span class="pre"><span class="Identifier">commands</span></span></tt> is a table associating built-in command names with their implementations. The <tt class="docutils literal"><span class="pre"><span class="Identifier">commandsApi</span></span></tt> object contains the output, compiler and vm exposed to each command.</p>
 <p><strong>Vm:</strong> <tt class="docutils literal"><span class="pre"><span class="Identifier">vm</span></span></tt> is the Vm object that contains the state, declarations, imports, and runs nim code.</p>
 
-    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/evaluator.nim#L177" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/evaluator.nim#L177" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="git@github.com:RowDaBoat/reploid.git/tree/version-2-2/src/repl/evaluator.nim#L172" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="git@github.com:RowDaBoat/reploid.git/edit/devel/src/repl/evaluator.nim#L172" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -160,7 +159,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-11 11:07:55 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-20 15:21:45 UTC</small>
       </div>
     </div>
   </div>

@@ -1,0 +1,6 @@
+nimTitle	compiler	vms/nimc/compiler.html	module src/vms/nimc/compiler		0
+nim	Compiler	vms/nimc/compiler.html#Compiler	object Compiler		7
+nim	newNimCompiler	vms/nimc/compiler.html#newNimCompiler,string,seq[string]	proc newNimCompiler(nim: string; flags: seq[string]): Compiler		24
+nim	version	vms/nimc/compiler.html#version,Compiler	proc version(self: Compiler): (string, int)		30
+nim	path	vms/nimc/compiler.html#path,Compiler	proc path(self: Compiler): (string, int)		35
+nim	compileLibrary	vms/nimc/compiler.html#compileLibrary,Compiler,string,string	proc compileLibrary(self: Compiler; source: string; output: string): (string, int)		45

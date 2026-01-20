@@ -1,9 +1,11 @@
 nimTitle	parser	repl/parser.html	module src/repl/parser		0
 nim	Parser	repl/parser.html#Parser	object Parser		7
-nim	parse	repl/parser.html#parse,string	proc parse(text: string): Parser		33
-nim	matchKeywords	repl/parser.html#matchKeywords,Parser,varargs[string]	proc matchKeywords(self: Parser; texts: varargs[string]): Parser		37
-nim	matchSymbols	repl/parser.html#matchSymbols,Parser,varargs[string]	proc matchSymbols(self: Parser; texts: varargs[string]): Parser		55
-nim	matchInteger	repl/parser.html#matchInteger,Parser	proc matchInteger(self: Parser): Parser		73
-nim	consumeSpaces	repl/parser.html#consumeSpaces,Parser	proc consumeSpaces(self: Parser): Parser		91
-nim	matchLabel	repl/parser.html#matchLabel,Parser	proc matchLabel(self: Parser): Parser		96
-nim	matchUpTo	repl/parser.html#matchUpTo,Parser,varargs[string]	proc matchUpTo(self: Parser; texts: varargs[string]): Parser		114
+nim	parse	repl/parser.html#parse,string	proc parse(text: string): Parser		37
+nim	matchText	repl/parser.html#matchText,Parser,varargs[string]	proc matchText(self: Parser; texts: varargs[string]): Parser		41
+nim	matchKeywords	repl/parser.html#matchKeywords,Parser,varargs[string]	proc matchKeywords(self: Parser; texts: varargs[string]): Parser		59
+nim	matchSymbols	repl/parser.html#matchSymbols,Parser,varargs[string]	proc matchSymbols(self: Parser; texts: varargs[string]): Parser		77
+nim	matchInteger	repl/parser.html#matchInteger,Parser	proc matchInteger(self: Parser): Parser		95
+nim	consumeSpaces	repl/parser.html#consumeSpaces,Parser	proc consumeSpaces(self: Parser): Parser		114
+nim	matchLabel	repl/parser.html#matchLabel,Parser	proc matchLabel(self: Parser): Parser		119
+nim	matchType	repl/parser.html#matchType,Parser	proc matchType(self: Parser): Parser		137
+nim	matchUpTo	repl/parser.html#matchUpTo,Parser,varargs[string]	proc matchUpTo(self: Parser; texts: varargs[string]): Parser		177

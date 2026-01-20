@@ -1,5 +1,8 @@
 nimTitle	reploid	reploid.html	module src/reploid		0
-nim	Configuration	reploid.html#Configuration	object Configuration		14
-nim	defaultConfig	reploid.html#defaultConfig	proc defaultConfig(): Configuration		34
-nim	defaultCommands	reploid.html#defaultCommands	proc defaultCommands(): Table[string, Command]		48
-nim	reploid	reploid.html#reploid,Configuration,Table[string,Command]	proc reploid(configuration: Configuration = defaultConfig();\n        commands: Table[string, Command] = defaultCommands())		56
+nim	nimc	reploid.html#nimc	VmImplementation.nimc		15
+nim	nims	reploid.html#nims	VmImplementation.nims		15
+nim	VmImplementation	reploid.html#VmImplementation	enum VmImplementation		15
+nim	Configuration	reploid.html#Configuration	object Configuration		18
+nim	defaultConfig	reploid.html#defaultConfig	proc defaultConfig(): Configuration		41
+nim	defaultCommands	reploid.html#defaultCommands	proc defaultCommands(): Table[string, Command]		57
+nim	reploid	reploid.html#reploid,Configuration,Table[string,Command]	proc reploid(configuration: Configuration = defaultConfig();\n        commands: Table[string, Command] = defaultCommands())		65

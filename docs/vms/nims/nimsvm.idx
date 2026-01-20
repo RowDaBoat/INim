@@ -1,0 +1,7 @@
+nimTitle	nimsvm	vms/nims/nimsvm.html	module src/vms/nims/nimsvm		0
+nim	NimSVm	vms/nims/nimsvm.html#NimSVm	type NimSVm		22
+nim	newNimSVm	vms/nims/nimsvm.html#newNimSVm,string	proc newNimSVm(tmpPath: string = getTempDir()): NimSVm		84
+nim	updateImports	vms/nims/nimsvm.html#updateImports.e,NimSVm	method updateImports(self: NimSVm): (string, int)		116
+nim	updateDeclarations	vms/nims/nimsvm.html#updateDeclarations.e,NimSVm	method updateDeclarations(self: NimSVm): (string, int)		135
+nim	updateState	vms/nims/nimsvm.html#updateState.e,NimSVm	method updateState(self: NimSVm): (string, int)		180
+nim	runCommand	vms/nims/nimsvm.html#runCommand.e,NimSVm,string	method runCommand(self: NimSVm; command: string): (string, int)		217
