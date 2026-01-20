@@ -27,49 +27,80 @@ proc isMuted(self: Printer, line: string): bool =
       return true
 
 
-proc matchCompilerOutput(text: string, sources: seq[string]): Parser =
+proc matchSourcePath(text: string, sources: seq[string]): Parser =
   parse(text)
     .matchUpTo(sources)
     .matchText(sources)
+
+
+proc matchLineNums(text: string): Parser =
+  parse(text)
     .matchSymbols("(")
     .matchInteger()
     .matchSymbols(",")
     .consumeSpaces()
     .matchInteger()
     .matchSymbols(")")
+
+
+proc matchCompilerOutput(text: string): Parser =
+  parse(text)
     .consumeSpaces()
     .matchKeywords("Hint", "Warning", "Error")
 
 
 proc styleIfCompilerOutput(self: Printer, line: string, path: string): (string, Style) =
-  let pathStartIndex = line.find(path)
+  var replaced = ""
+  var rest = line
+  var style = None
 
-  if pathStartIndex == -1:
-    return (line, None)
+  while true:
+    let pathStartIndex = rest.find(path)
 
-  var prev = line[0 ..< pathStartIndex]
+    if pathStartIndex == -1:
+      return (replaced & rest, style)
 
-  if prev.endsWith("/private"):
-    prev = prev[0..<prev.len - "/private".len]
+    replaced &= rest[0 ..< pathStartIndex]
+    rest = rest[pathStartIndex + path.len..^1]
 
-  let post = line[pathStartIndex + path.len..^1]
-  let matchCompilerOut = matchCompilerOutput(post, self.sourceFileNames)
+    if replaced.endsWith("/private"):
+      replaced = replaced[0..<replaced.len - "/private".len]
 
-  if not matchCompilerOut.ok:
-    return (line, None)
+    let sourcePath = rest.matchSourcePath(self.sourceFileNames)
 
-  var replacement = self.sourceFileReplacements[matchCompilerOut.tokens[1]]
+    if not sourcePath.ok:
+      replaced &= "[Temp]"
+      continue
 
-  let outType = matchCompilerOut.tokens[^1]
-  let style = case outType:
-    of "Hint": Hint
-    of "Warning": Warning
-    of "Error": Error
-    else: None
+    let sourceFile = sourcePath.tokens[1]
+    replaced &= self.sourceFileReplacements[sourceFile]
+    rest = rest[sourceFile.len..^1]
 
-  let replacedLine = prev & replacement & " " & matchCompilerOut.tokens[^1] & matchCompilerOut.text
-  result = (replacedLine, style)
+    let lineNums = rest.matchLineNums()
 
+    if not lineNums.ok:
+      continue
+
+    replaced &= lineNums.tokens.join("")
+    rest = lineNums.text
+
+    let compilerOutput = rest.matchCompilerOutput()
+
+    if not compilerOutput.ok:
+      continue
+
+    let outType = compilerOutput.tokens[^1]
+    replaced &= " " & outType
+    rest = compilerOutput.text
+
+    style = max(
+      style,
+      case outType:
+        of "Hint": Hint
+        of "Warning": Warning
+        of "Error": Error
+        else: None
+    )
 
 proc processLine(self: Printer, line: string): (string, Style) =
   var line = line
